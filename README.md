@@ -1,1 +1,1 @@
-# Proof of concept for integration with Google API
+# wordscore_engine
