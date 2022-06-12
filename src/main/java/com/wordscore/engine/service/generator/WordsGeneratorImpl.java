@@ -1,19 +1,16 @@
 package com.wordscore.engine.service.generator;
 
-import com.maximeroussy.invitrode.WordGenerator;
-import com.szadowsz.datamuse.DatamuseClient;
-import com.szadowsz.datamuse.DatamuseException;
-import com.szadowsz.datamuse.DatamuseParam;
-import com.szadowsz.datamuse.WordResult;
-import kotlin.collections.ArrayDeque;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import  com.github.dhiraj072.randomwordgenerator.RandomWordGenerator;
 
+
+import java.io.IOException;
 
 @Service
 public class WordsGeneratorImpl implements WordsGenerator {
@@ -24,28 +21,38 @@ public class WordsGeneratorImpl implements WordsGenerator {
     }
 
     @Override
-    public List<String> generateRandomKeyword() {
+    public String generateRandomKeyword() {
 
-        WordGenerator generator = new WordGenerator();
-        String myNewWord = generator.newWord(5);
+        String word = RandomWordGenerator.getRandomWord();
 
 
-        DatamuseClient dmuse = new DatamuseClient();
-        Map<DatamuseParam.Code, String> options = new HashMap<>();
-        options.put(DatamuseParam.Code.REL_JJA, "yellow");
-        try {
-            List<WordResult> results = dmuse.complexQuery(options);
+//        OkHttpClient httpClient = new OkHttpClient();
+//
+//        Request request = new Request.Builder()
+//                .url("https://random-words-api.vercel.app/word")
+//                .get()
+//                .build();
+//
+//        String word = null;
+//        try (Response response = httpClient.newCall(request).execute()) {
+//
+//            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+//
+//            // Get response body
+//
+//            ObjectMapper objectMapper = new ObjectMapper();
+//            String responseBody = response.body().string();
+//            response.body().close();
+//            Root[] root = objectMapper.readValue(responseBody, Root[].class);
+//
+//            for (Root dd : root) {
+//                word = dd.word.toLowerCase();
+//            }
+//
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
 
-            List<String> endResult = new ArrayDeque<>();
-            for (WordResult result : results) {
-                endResult.add(result.getWord());
-            }
-
-            return endResult;
-        } catch (DatamuseException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        return word;
     }
 }

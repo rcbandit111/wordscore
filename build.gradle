@@ -30,13 +30,16 @@ dependencies {
     implementation group: 'org.json', name: 'json', version: '20220320'
     implementation group: 'com.szadowsz', name: 'datamuse4j', version: '0.2.0'
     implementation 'com.maximeroussy.invitrode:invitrode:2.0.2'
-
+    implementation 'com.github.dhiraj072:random-word-generator:1.1.0'
 
     // Lombok
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
     testCompileOnly 'org.projectlombok:lombok:1.18.24'
     testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+
+    implementation 'org.mapstruct:mapstruct:1.5.1.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.1.Final'
 
     testImplementation 'org.junit.jupiter:junit-jupiter-api:5.8.2'
     testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine:5.8.2'

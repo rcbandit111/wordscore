@@ -1,5 +1,8 @@
 package com.wordscore.engine.processor;
 
+import com.wordscore.engine.database.entity.ProcessedWords;
+import com.wordscore.engine.database.service.ProcessedWordsService;
+import com.wordscore.engine.service.generator.WordsGenerator;
 import okhttp3.*;
 import okio.Buffer;
 import org.json.JSONArray;
@@ -8,8 +11,17 @@ import org.json.JSONObject;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import java.io.IOException;
+import java.io.*;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class KeywordPostJob extends ServiceFactory implements Job {
 
@@ -18,7 +30,58 @@ public class KeywordPostJob extends ServiceFactory implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-        System.out.println(wordsGenerator.generateRandomKeyword());
+
+        try {
+            BufferedReader reader;
+            try {
+                reader = new BufferedReader(new FileReader(
+                        "C:\\in_progress\\test.txt"));
+                String line = reader.readLine();
+                while (line != null) {
+                    System.out.println(line);
+
+//                    Thread.sleep(20);
+                    Optional<ProcessedWords> isFound = processedWordsService.findByKeyword(line);
+
+                    if(!isFound.isPresent()){
+                        ProcessedWords obj = ProcessedWords.builder()
+                                .keyword(line)
+                                .createdAt(LocalDateTime.now())
+                                .build();
+                        processedWordsService.save(obj);
+                    }
+
+                    // read next line
+                    line = reader.readLine();
+                }
+                reader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+
+
+
+//        String word = wordsGenerator.generateRandomKeyword();
+//
+//        System.out.println(word);
+//
+////        Optional<ProcessedWords> isFound = processedWordsService.findByKeyword(word);
+////
+////        if(!isFound.isPresent()){
+//            ProcessedWords obj = ProcessedWords.builder()
+//                    .keyword(word)
+//                    .createdAt(LocalDateTime.now())
+//                    .build();
+//            processedWordsService.save(obj);
+////        }
+
+
 
 //        System.out.println("Random word " + wordsGenerator.generateRandomString(5, 10));
 //
@@ -79,5 +142,28 @@ public class KeywordPostJob extends ServiceFactory implements Job {
             System.out.println(buffer.readUtf8());
         }
     }
+
+    public void removeLineFromFile(String lineToRemove, File f) throws FileNotFoundException, IOException{
+        //Reading File Content and storing it to a StringBuilder variable ( skips lineToRemove)
+        StringBuilder sb = new StringBuilder();
+        try (Scanner sc = new Scanner(f)) {
+            String currentLine;
+            while(sc.hasNext()){
+                currentLine = sc.nextLine();
+                if(currentLine.equals(lineToRemove)){
+                    continue; //skips lineToRemove
+                }
+                sb.append(currentLine).append("\n");
+            }
+        }
+        //Delete File Content
+        PrintWriter pw = new PrintWriter(f);
+        pw.close();
+
+        BufferedWriter writer = new BufferedWriter(new FileWriter(f, true));
+        writer.append(sb.toString());
+        writer.close();
+    }
+
 
 }

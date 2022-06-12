@@ -1,14 +1,15 @@
 package com.wordscore.engine.database.service;
 
 import com.wordscore.engine.database.entity.ProcessedWords;
+import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 
 import java.util.Optional;
 
 public interface ProcessedWordsService {
 
-    Optional<ProcessedWords> findByName(String name);
+    Optional<ProcessedWords> findByKeyword(String keyword);
 
-    Optional<ProcessedWords> findByGoogleScore(long googleScore);
+    Optional<ProcessedWords> save(ProcessedWords entity);
 
-    void save(ProcessedWords entity);
+    int update(UpdateKeywordRequestDTO updateKeywordRequestDTO);
 }

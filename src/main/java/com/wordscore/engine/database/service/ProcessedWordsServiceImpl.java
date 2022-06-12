@@ -1,18 +1,20 @@
 package com.wordscore.engine.database.service;
 
 import com.wordscore.engine.database.entity.ProcessedWords;
+import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.TypedQuery;
 import java.util.Optional;
 
 @Service
 @Transactional
 public class ProcessedWordsServiceImpl implements ProcessedWordsService {
+
+    // SELECT pg_size_pretty(pg_database_size('wordscore_engine'));
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -25,23 +27,17 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     }
 
     @Override
-    public Optional<ProcessedWords> findByName(String name) {
-        String hql = "select e from " + ProcessedWords.class.getName() + " e where e.name = :name ORDER BY e.createdAt ASC";
-        TypedQuery<ProcessedWords> query = entityManager.createQuery(hql, ProcessedWords.class).setMaxResults(1).setParameter("name", name);
-        Optional<ProcessedWords> word = Optional.of(query.getSingleResult());
-        return word;
+    public Optional<ProcessedWords> findByKeyword(String keyword) {
+        return dao.findByKeyword(keyword);
     }
 
     @Override
-    public Optional<ProcessedWords> findByGoogleScore(long googleScore) {
-        String hql = "select e from " + ProcessedWords.class.getName() + " e where e.google_score = :googleScore ORDER BY e.createdAt ASC";
-        TypedQuery<ProcessedWords> query = entityManager.createQuery(hql, ProcessedWords.class).setMaxResults(1).setParameter("googleScore", googleScore);
-        Optional<ProcessedWords> word = Optional.of(query.getSingleResult());
-        return word;
+    public Optional<ProcessedWords> save(ProcessedWords entity) {
+        return Optional.of(dao.saveAndFlush(entity));
     }
 
     @Override
-    public void save(ProcessedWords entity) {
-        dao.saveAndFlush(entity);
+    public int update(UpdateKeywordRequestDTO dto) {
+        return dao.updateByKeyword(dto.getKeyword(), dto.getVolumeUs(), dto.getSeoScoreUs(), dto.getSeoScoreUk());
     }
 }
