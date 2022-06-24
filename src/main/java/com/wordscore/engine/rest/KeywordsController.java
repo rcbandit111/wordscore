@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import java.util.Objects;
 import java.util.Optional;
 
 @RestController
@@ -53,7 +52,7 @@ public class KeywordsController {
     }
 
     @RequestMapping(method = RequestMethod.PATCH, value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> passwordReset(@Valid @RequestBody UpdateKeywordRequestDTO updateKeywordRequestDTO) {
+    public ResponseEntity<?> update(@Valid @RequestBody UpdateKeywordRequestDTO updateKeywordRequestDTO) {
 
         int result = keywordsRestService.updateKeyword(updateKeywordRequestDTO);
         if(result == 0){

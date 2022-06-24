@@ -13,7 +13,6 @@ public class CreateKeywordResponseDTO {
 
     private String keyword;
     private LocalDateTime createdAt;
-    private LocalDateTime updatedAt;
     private long seoScoreUk;
     private long seoScoreUs;
     private long volumeUs;
