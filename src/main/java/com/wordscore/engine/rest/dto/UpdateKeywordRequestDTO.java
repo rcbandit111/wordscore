@@ -2,7 +2,7 @@ package com.wordscore.engine.rest.dto;
 
 import lombok.*;
 
-import java.time.LocalDateTime;
+import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -12,7 +12,9 @@ import java.time.LocalDateTime;
 public class UpdateKeywordRequestDTO {
 
     private String keyword;
-    private int seoScoreUk;
-    private int seoScoreUs;
-    private int volumeUs;
+    private BigDecimal seoScoreUk;
+    private BigDecimal seoScoreUs;
+    private BigDecimal lowRange;
+    private BigDecimal highRange;
+    private BigDecimal volumeUs;
 }

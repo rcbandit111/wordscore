@@ -10,7 +10,7 @@ spring:
     url: jdbc:postgresql://185.185.126.15:5432/wordscore_engine
     driverClassName: org.postgresql.Driver
     username: admin
-    password: 6y5t4r3e2w1q!Q
+    password: l44rssffzas
   jpa:
     generate-ddl: true
     hibernate:

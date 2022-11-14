@@ -8,8 +8,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-06-12T21:39:54+0300",
-    comments = "version: 1.5.1.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.4.1.jar, environment: Java 17 (Oracle Corporation)"
+    date = "2022-11-13T22:17:14+0200",
+    comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.1.jar, environment: Java 17 (Oracle Corporation)"
 )
 @Component
 public class KeywordMapperImpl implements KeywordMapper {
@@ -25,9 +25,15 @@ public class KeywordMapperImpl implements KeywordMapper {
         findKeywordResponseDTO.keyword( processedWords.getKeyword() );
         findKeywordResponseDTO.createdAt( processedWords.getCreatedAt() );
         findKeywordResponseDTO.updatedAt( processedWords.getUpdatedAt() );
-        findKeywordResponseDTO.seoScoreUk( processedWords.getSeoScoreUk() );
-        findKeywordResponseDTO.seoScoreUs( processedWords.getSeoScoreUs() );
-        findKeywordResponseDTO.volumeUs( processedWords.getVolumeUs() );
+        if ( processedWords.getSeoScoreUk() != null ) {
+            findKeywordResponseDTO.seoScoreUk( processedWords.getSeoScoreUk().longValue() );
+        }
+        if ( processedWords.getSeoScoreUs() != null ) {
+            findKeywordResponseDTO.seoScoreUs( processedWords.getSeoScoreUs().longValue() );
+        }
+        if ( processedWords.getVolumeUs() != null ) {
+            findKeywordResponseDTO.volumeUs( processedWords.getVolumeUs().longValue() );
+        }
 
         return findKeywordResponseDTO.build();
     }
@@ -43,9 +49,15 @@ public class KeywordMapperImpl implements KeywordMapper {
         findKeywordResponseDTO.keyword( processedWords.getKeyword() );
         findKeywordResponseDTO.createdAt( processedWords.getCreatedAt() );
         findKeywordResponseDTO.updatedAt( processedWords.getUpdatedAt() );
-        findKeywordResponseDTO.seoScoreUk( processedWords.getSeoScoreUk() );
-        findKeywordResponseDTO.seoScoreUs( processedWords.getSeoScoreUs() );
-        findKeywordResponseDTO.volumeUs( processedWords.getVolumeUs() );
+        if ( processedWords.getSeoScoreUk() != null ) {
+            findKeywordResponseDTO.seoScoreUk( processedWords.getSeoScoreUk().longValue() );
+        }
+        if ( processedWords.getSeoScoreUs() != null ) {
+            findKeywordResponseDTO.seoScoreUs( processedWords.getSeoScoreUs().longValue() );
+        }
+        if ( processedWords.getVolumeUs() != null ) {
+            findKeywordResponseDTO.volumeUs( processedWords.getVolumeUs().longValue() );
+        }
 
         return findKeywordResponseDTO.build();
     }
@@ -61,9 +73,15 @@ public class KeywordMapperImpl implements KeywordMapper {
         updateKeywordResponseDTO.keyword( processedWords.getKeyword() );
         updateKeywordResponseDTO.createdAt( processedWords.getCreatedAt() );
         updateKeywordResponseDTO.updatedAt( processedWords.getUpdatedAt() );
-        updateKeywordResponseDTO.seoScoreUk( (int) processedWords.getSeoScoreUk() );
-        updateKeywordResponseDTO.seoScoreUs( (int) processedWords.getSeoScoreUs() );
-        updateKeywordResponseDTO.volumeUs( (int) processedWords.getVolumeUs() );
+        if ( processedWords.getSeoScoreUk() != null ) {
+            updateKeywordResponseDTO.seoScoreUk( processedWords.getSeoScoreUk().intValue() );
+        }
+        if ( processedWords.getSeoScoreUs() != null ) {
+            updateKeywordResponseDTO.seoScoreUs( processedWords.getSeoScoreUs().intValue() );
+        }
+        if ( processedWords.getVolumeUs() != null ) {
+            updateKeywordResponseDTO.volumeUs( processedWords.getVolumeUs().intValue() );
+        }
 
         return updateKeywordResponseDTO.build();
     }

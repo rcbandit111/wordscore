@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -23,14 +24,29 @@ public class ProcessedWords implements Serializable {
     @Column(name = "keyword", length = 200, unique = true)
     private String keyword;
 
-    @Column(name = "volume_us", length = 100)
-    private long volumeUs;
+    @Column(name = "volume_us")
+    private BigDecimal volumeUs;
 
-    @Column(name = "seo_score_us", length = 100)
-    private long seoScoreUs;
+    @Column(name = "seo_score_us")
+    private BigDecimal seoScoreUs;
 
-    @Column(name = "seo_score_uk", length = 100)
-    private long seoScoreUk;
+    @Column(name = "seo_score_uk")
+    private BigDecimal seoScoreUk;
+
+    @Column(name = "low_range")
+    private BigDecimal lowRange;
+
+    @Column(name = "high_range")
+    private BigDecimal highRange;
+
+    @Column(name = "is_com_domain_available")
+    private Boolean isComDomainAvailable;
+
+    @Column(name = "is_net_domain_available")
+    private Boolean isNetDomainAvailable;
+
+    @Column(name = "is_org_domain_available")
+    private Boolean isOrgDomainAvailable;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

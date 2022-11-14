@@ -12,4 +12,6 @@ public interface ProcessedWordsService {
     Optional<ProcessedWords> save(ProcessedWords entity);
 
     int update(UpdateKeywordRequestDTO updateKeywordRequestDTO);
+
+    int updateBySeoScoreUs(UpdateKeywordRequestDTO updateKeywordRequestDTO);
 }

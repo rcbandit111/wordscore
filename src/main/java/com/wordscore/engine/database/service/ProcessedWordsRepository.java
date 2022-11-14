@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 @Repository
@@ -17,11 +18,15 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     Optional<ProcessedWords> findByKeyword(@Param("keyword") String keyword);
 
     @Modifying
-    @Query(value="update processed_words set volume_us = :volumeUs, seo_score_us = :seoScoreUs, " +
-                 " seo_score_uk = :seoScoreUk where keyword = :keyword", nativeQuery = true)
+    @Query(value="update processed_words set seo_score_us = :seoScoreUs where keyword = :keyword", nativeQuery = true)
     int updateByKeyword(@Param("keyword") String keyword,
-                        @Param("volumeUs") int volumeUs,
-                        @Param("seoScoreUs") int seoScoreUs,
-                        @Param("seoScoreUk") int seoScoreUk);
+                        @Param("seoScoreUs") BigDecimal seoScoreUs);
+
+    @Modifying
+    @Query(value="update processed_words set seo_score_us = :seoScoreUs, low_range = :lowRange, high_range = :highRange where keyword = :keyword", nativeQuery = true)
+    int updateBySeoScoreUs(@Param("keyword") String keyword,
+                        @Param("seoScoreUs") BigDecimal seoScoreUs,
+                        @Param("lowRange") BigDecimal lowRange,
+                        @Param("highRange") BigDecimal highRange);
 
 }

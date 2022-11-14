@@ -38,6 +38,11 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
 
     @Override
     public int update(UpdateKeywordRequestDTO dto) {
-        return dao.updateByKeyword(dto.getKeyword(), dto.getVolumeUs(), dto.getSeoScoreUs(), dto.getSeoScoreUk());
+        return dao.updateByKeyword(dto.getKeyword(), dto.getSeoScoreUs());
+    }
+
+    @Override
+    public int updateBySeoScoreUs(UpdateKeywordRequestDTO dto) {
+        return dao.updateBySeoScoreUs(dto.getKeyword(), dto.getSeoScoreUs(), dto.getLowRange(), dto.getHighRange());
     }
 }
