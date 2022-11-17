@@ -30,7 +30,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
         File directoryPath = new File("C:\\csv\\nov");
         // Create a new subfolder called "processed" into source directory
         try {
-            Path path = Path.of(directoryPath.getAbsolutePath() + "/processed");
+            Path path = Path.of(directoryPath.getAbsolutePath() + "\\processed");
             if (!Files.exists(path) || !Files.isDirectory(path)) {
                 Files.createDirectory(path);
             }
@@ -63,7 +63,6 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                             .withSkipLines(3)
                             .build()
                             .parse();
-
 
                 for (CsvLine item : beans) {
 
@@ -100,8 +99,6 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 .build();
                         processedWordsService.save(obj);
                     }
-
-
             }}
 
             } catch (Exception e){
@@ -109,13 +106,17 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
             }
 
             // Move here file into new subdirectory when file processing is finished
-            Path copied = Paths.get(file.getAbsolutePath() + "/processed");
+            Path copied = Paths.get(file.getParent() + "\\processed");
             Path originalPath = file.toPath();
             try {
-                Files.move(originalPath, copied, StandardCopyOption.REPLACE_EXISTING);
+                // Use resolve method to keep the "processed" as folder
+                Files.move(originalPath, copied.resolve(originalPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+
+            System.out.println(String.format("\nProcessed file : %s, moving the file to subfolder /processed\n",
+                    originalPath));
         }
     }
 }
