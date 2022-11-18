@@ -49,6 +49,10 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
         // List of all the csv files
         File filesList[] = directoryPath.listFiles(textFileFilter);
         System.out.println("List of the text files in the specified directory:");
+
+//        Optional<File> csvFile = Arrays.stream(filesList).findFirst();
+//        File file = csvFile.get();
+
         for(File file : filesList) {
 //            System.out.println("File name: "+file.getName());
 //            System.out.println("File path: "+file.getAbsolutePath());

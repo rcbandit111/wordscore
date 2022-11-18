@@ -29,4 +29,19 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
                         @Param("lowRange") BigDecimal lowRange,
                         @Param("highRange") BigDecimal highRange);
 
+    @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) LIMIT 1", nativeQuery = true)
+    Optional<ProcessedWords> findRandomKeyword();
+
+    @Modifying
+    @Query(value="update processed_words set is_com_domain_available = :isAvailable where id = :id", nativeQuery = true)
+    int updateComDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
+
+    @Modifying
+    @Query(value="update processed_words set is_net_domain_available = :isAvailable where id = :id", nativeQuery = true)
+    int updateNetDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
+
+    @Modifying
+    @Query(value="update processed_words set is_org_domain_available = :isAvailable where id = :id", nativeQuery = true)
+    int updateOrgDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
+
 }

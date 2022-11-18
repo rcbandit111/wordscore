@@ -45,4 +45,24 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     public int updateBySeoScoreUs(UpdateKeywordRequestDTO dto) {
         return dao.updateBySeoScoreUs(dto.getKeyword(), dto.getSeoScoreUs(), dto.getLowRange(), dto.getHighRange());
     }
+
+    @Override
+    public Optional<ProcessedWords> findRandomKeyword() {
+        return dao.findRandomKeyword();
+    }
+
+    @Override
+    public int updateComDomainById(long id, boolean isAvailable) {
+        return dao.updateComDomainById(id, isAvailable);
+    }
+
+    @Override
+    public int updateNetDomainById(long id, boolean isAvailable) {
+        return dao.updateNetDomainById(id, isAvailable);
+    }
+
+    @Override
+    public int updateOrgDomainById(long id, boolean isAvailable) {
+        return dao.updateOrgDomainById(id, isAvailable);
+    }
 }

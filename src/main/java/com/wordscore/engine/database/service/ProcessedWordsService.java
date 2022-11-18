@@ -14,4 +14,12 @@ public interface ProcessedWordsService {
     int update(UpdateKeywordRequestDTO updateKeywordRequestDTO);
 
     int updateBySeoScoreUs(UpdateKeywordRequestDTO updateKeywordRequestDTO);
+
+    Optional<ProcessedWords> findRandomKeyword();
+
+    int updateComDomainById(long id, boolean isAvailable);
+
+    int updateNetDomainById(long id, boolean isAvailable);
+
+    int updateOrgDomainById(long id, boolean isAvailable);
 }

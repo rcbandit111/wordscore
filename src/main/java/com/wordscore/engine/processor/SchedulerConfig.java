@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 import org.quartz.JobDetail;
+import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
 import org.quartz.spi.JobFactory;
 import org.slf4j.Logger;
@@ -60,14 +61,15 @@ public class SchedulerConfig {
         factoryBean.setJobDetail(jobDetail);
         factoryBean.setStartDelay(0L);
         factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(0); //         factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY); // factoryBean.setRepeatCount(0); //
         return factoryBean;
     }
 
     @Bean
     public JobDetailFactoryBean keywordPostJobDetail() {
         JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-        factoryBean.setJobClass(ImportCsvFilePostJob.class);
+//        factoryBean.setJobClass(ImportCsvFilePostJob.class);
+        factoryBean.setJobClass(DomainComCheckJob.class);
         factoryBean.setDurability(true);
         return factoryBean;
     }
