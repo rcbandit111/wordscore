@@ -33,7 +33,7 @@ public class DomainOrgCheckJob extends ServiceFactory implements Job {
             System.out.println("Checking keyword: " + isFound.get().getKeyword());
             long id = isFound.get().getId();
             String domain = payload.replaceAll("\\s+", "");
-            System.out.println("Checking domain: " + domain);
+            System.out.println("Checking org domain: " + domain);
 
             try (Socket socket = new Socket(WHOIS_HOST, WHOIS_PORT)) {
                 OutputStream out = socket.getOutputStream();

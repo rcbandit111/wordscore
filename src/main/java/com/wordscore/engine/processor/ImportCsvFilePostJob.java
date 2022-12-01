@@ -27,10 +27,10 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
     @Override
     public void execute(JobExecutionContext context) {
 
-        File directoryPath = new File("C:\\csv\\nov");
+        File directoryPath = new File("/opt/csv/nov");
         // Create a new subfolder called "processed" into source directory
         try {
-            Path path = Path.of(directoryPath.getAbsolutePath() + "\\processed");
+            Path path = Path.of(directoryPath.getAbsolutePath() + "/processed");
             if (!Files.exists(path) || !Files.isDirectory(path)) {
                 Files.createDirectory(path);
             }
@@ -110,7 +110,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
             }
 
             // Move here file into new subdirectory when file processing is finished
-            Path copied = Paths.get(file.getParent() + "\\processed");
+            Path copied = Paths.get(file.getParent() + "/processed");
             Path originalPath = file.toPath();
             try {
                 // Use resolve method to keep the "processed" as folder

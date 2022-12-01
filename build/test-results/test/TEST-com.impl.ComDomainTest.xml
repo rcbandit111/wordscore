@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="com.impl.ComDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-12-01T21:13:00" hostname="DESKTOP-BKOOSAD" time="0.116">
+  <properties/>
+  <testcase name="justAnExample()" classname="com.impl.ComDomainTest" time="0.116"/>
+  <system-out><![CDATA[---> 2026-09-21T04:00:00Z
+---> 2026-09-21T04:00
+---> Not available cnn.com
+]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

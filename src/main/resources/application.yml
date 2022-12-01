@@ -22,3 +22,15 @@ spring:
 
 simplejob:
   frequency: 1000
+
+first:
+  job:
+    frequency: 1000
+
+second:
+  job:
+    frequency: 1000
+
+third:
+  job:
+    frequency: 1000
