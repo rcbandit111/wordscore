@@ -1,9 +1,5 @@
 package com.wordscore.engine.processor;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Properties;
-
 import org.quartz.JobDetail;
 import org.quartz.SimpleTrigger;
 import org.quartz.Trigger;
@@ -13,7 +9,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.beans.factory.config.PropertiesFactoryBean;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,6 +16,8 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.scheduling.quartz.JobDetailFactoryBean;
 import org.springframework.scheduling.quartz.SchedulerFactoryBean;
 import org.springframework.scheduling.quartz.SimpleTriggerFactoryBean;
+
+import java.util.List;
 
 @Configuration
 public class SchedulerConfig {
@@ -41,47 +38,6 @@ public class SchedulerConfig {
         return jobFactory;
     }
 
-//    @Bean
-//    public SchedulerFactoryBean schedulerFactoryBean(Trigger simpleJobTrigger) throws IOException {
-//
-//        SchedulerFactoryBean schedulerFactory = new SchedulerFactoryBean();
-//        schedulerFactory.setQuartzProperties(quartzProperties());
-//        schedulerFactory.setWaitForJobsToCompleteOnShutdown(true);
-//        schedulerFactory.setAutoStartup(true);
-//        schedulerFactory.setTriggers(simpleJobTrigger);
-//        schedulerFactory.setJobFactory(jobFactory());
-//        return schedulerFactory;
-//    }
-//
-//    @Bean
-//    public SimpleTriggerFactoryBean simpleJobTrigger(@Qualifier("keywordPostJobDetail") JobDetail jobDetail,
-//                                                     @Value("${simplejob.frequency}") long frequency) {
-//        LOG.info("simpleJobTrigger");
-//
-//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-//        factoryBean.setJobDetail(jobDetail);
-//        factoryBean.setStartDelay(0L);
-//        factoryBean.setRepeatInterval(frequency);
-//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY); // factoryBean.setRepeatCount(0); //
-//        return factoryBean;
-//    }
-//
-//    @Bean
-//    public JobDetailFactoryBean keywordPostJobDetail() {
-//        JobDetailFactoryBean factoryBean = new JobDetailFactoryBean();
-//        factoryBean.setJobClass(ImportCsvFilePostJob.class);
-////        factoryBean.setJobClass(DomainNetCheckJob.class);
-//        factoryBean.setDurability(true);
-//        return factoryBean;
-//    }
-//
-//    public Properties quartzProperties() throws IOException {
-//        PropertiesFactoryBean propertiesFactoryBean = new PropertiesFactoryBean();
-//        propertiesFactoryBean.setLocation(new ClassPathResource("/quartz.properties"));
-//        propertiesFactoryBean.afterPropertiesSet();
-//        return propertiesFactoryBean.getObject();
-//    }
-
     @Bean
     public SchedulerFactoryBean schedulerFactoryBean(List<JobDetail> jobDetails,
                                                      List<Trigger> triggers) {
@@ -93,16 +49,17 @@ public class SchedulerConfig {
         schedulerFactory.setJobFactory(jobFactory());
         schedulerFactory.setWaitForJobsToCompleteOnShutdown(true);
         schedulerFactory.setAutoStartup(true);
-        //Multiple jobs are passed as an array
+        // Multiple jobs are passed as an array
         schedulerFactory.setJobDetails(jobDetails.toArray(JobDetail[] ::new));
-        //Multiple triggers are passed as an array
+        // Multiple triggers are passed as an array
         schedulerFactory.setTriggers(triggers.toArray(Trigger[] ::new));
         return schedulerFactory;
     }
 
+    // Job for checking .com domains
 
-    @Bean(name = "FirstJob")
-    public JobDetailFactoryBean firstJob() {
+    @Bean(name = "DomainComCheckJob")
+    public JobDetailFactoryBean DomainComCheckJob() {
 
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(DomainComCheckJob.class);
@@ -111,10 +68,10 @@ public class SchedulerConfig {
     }
 
     @Bean
-    public SimpleTriggerFactoryBean firstJobTrigger(@Qualifier("FirstJob") JobDetail job,
+    public SimpleTriggerFactoryBean domainComCheckJobTrigger(@Qualifier("DomainComCheckJob") JobDetail job,
                                                     @Value("${first.job.frequency}") long frequency) {
 
-        LOG.info("First Job Trigger");
+        LOG.info("Domain Com Job Trigger");
 
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(job);
@@ -124,8 +81,10 @@ public class SchedulerConfig {
         return factoryBean;
     }
 
-    @Bean(name = "SecondJob")
-    public JobDetailFactoryBean secondJob() {
+    // Job for checking .net domains
+
+    @Bean(name = "DomainNetCheck")
+    public JobDetailFactoryBean DomainNetCheck() {
 
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(DomainNetCheckJob.class);
@@ -134,10 +93,10 @@ public class SchedulerConfig {
     }
 
     @Bean
-    public SimpleTriggerFactoryBean secondJobTrigger(@Qualifier("SecondJob") JobDetail job,
+    public SimpleTriggerFactoryBean domainNetCheckTrigger(@Qualifier("DomainNetCheck") JobDetail job,
                                                      @Value("${second.job.frequency}") long frequency) {
 
-        LOG.info("Second Job Trigger");
+        LOG.info("Domain Net Job Trigger");
 
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(job);
@@ -147,8 +106,10 @@ public class SchedulerConfig {
         return factoryBean;
     }
 
-    @Bean(name = "ThirdJob")
-    public JobDetailFactoryBean thirdJob() {
+    // Job for checking .org domains
+
+    @Bean(name = "DomainOrgCheck")
+    public JobDetailFactoryBean domainOrgCheck() {
 
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
         jobDetailFactory.setJobClass(DomainOrgCheckJob.class);
@@ -157,10 +118,35 @@ public class SchedulerConfig {
     }
 
     @Bean
-    public SimpleTriggerFactoryBean thirdJobTrigger(@Qualifier("ThirdJob") JobDetail job,
+    public SimpleTriggerFactoryBean domainOrgTrigger(@Qualifier("DomainOrgCheck") JobDetail job,
                                                      @Value("${third.job.frequency}") long frequency) {
 
-        LOG.info("Third Job Trigger");
+        LOG.info("Domain Org Job Trigger");
+
+        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+        factoryBean.setJobDetail(job);
+        factoryBean.setStartDelay(0L);
+        factoryBean.setRepeatInterval(frequency);
+        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+        return factoryBean;
+    }
+
+    // Job for counting words
+
+    @Bean(name = "WordsCountJob")
+    public JobDetailFactoryBean wordsCountJob() {
+
+        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+        jobDetailFactory.setJobClass(WordsCountJob.class);
+        jobDetailFactory.setDurability(true);
+        return jobDetailFactory;
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean wordsCountJobTrigger(@Qualifier("WordsCountJob") JobDetail job,
+                                                    @Value("${third.job.frequency}") long frequency) {
+
+        LOG.info("Words Count Job Trigger");
 
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(job);

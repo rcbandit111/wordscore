@@ -32,6 +32,13 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findRandomKeyword();
 
+    @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) where keywords_count is null LIMIT 1", nativeQuery = true)
+    Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty();
+
+    @Modifying
+    @Query(value = "UPDATE processed_words SET keywords_count = :count WHERE keyword = :keyword", nativeQuery = true)
+    int updateKeywordCount(@Param("count") Integer count, @Param("keyword") String keyword);
+
     @Modifying
     @Query(value="update processed_words set is_com_domain_available = :isAvailable where id = :id", nativeQuery = true)
     int updateComDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);

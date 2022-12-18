@@ -17,6 +17,10 @@ public interface ProcessedWordsService {
 
     Optional<ProcessedWords> findRandomKeyword();
 
+    Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty();
+
+    int updateKeywordCount(Integer count, String keyword);
+
     int updateComDomainById(long id, boolean isAvailable);
 
     int updateNetDomainById(long id, boolean isAvailable);

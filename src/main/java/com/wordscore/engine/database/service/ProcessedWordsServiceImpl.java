@@ -52,6 +52,16 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     }
 
     @Override
+    public Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty() {
+        return dao.findRandomKeywordWhereWordsCountIsEmpty();
+    }
+
+    @Override
+    public int updateKeywordCount(Integer count, String keyword) {
+        return dao.updateKeywordCount(count, keyword);
+    }
+
+    @Override
     public int updateComDomainById(long id, boolean isAvailable) {
         return dao.updateComDomainById(id, isAvailable);
     }

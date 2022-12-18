@@ -24,6 +24,9 @@ public class ProcessedWords implements Serializable {
     @Column(name = "keyword", length = 200, unique = true)
     private String keyword;
 
+    @Column(name = "keywords_count", length = 10)
+    private Integer keywordsCount;
+
     @Column(name = "volume_us")
     private BigDecimal volumeUs;
 
@@ -47,6 +50,12 @@ public class ProcessedWords implements Serializable {
 
     @Column(name = "is_org_domain_available")
     private Boolean isOrgDomainAvailable;
+
+    @Column(name = "is_trademark")
+    private Boolean isTrademark;
+
+    @Column(name = "sold_at")
+    private LocalDateTime soldAt;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
