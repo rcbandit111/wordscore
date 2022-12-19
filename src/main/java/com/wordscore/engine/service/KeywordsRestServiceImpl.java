@@ -17,19 +17,21 @@ public class KeywordsRestServiceImpl implements KeywordsRestService {
     private KeywordMapper keywordMapper;
 
     @Autowired
-    public KeywordsRestServiceImpl(ProcessedWordsService processedWordsService, KeywordMapper keywordMapper) {
+    public KeywordsRestServiceImpl(ProcessedWordsService processedWordsService, KeywordMapper keywordMapper)
+    {
         this.processedWordsService = processedWordsService;
         this.keywordMapper = keywordMapper;
     }
 
     @Override
-    public Optional<FindKeywordResponseDTO> findKeyword(FindKeywordRequestDTO findKeywordRequestDTO) {
+    public Optional<FindKeywordResponseDTO> findKeyword(FindKeywordRequestDTO findKeywordRequestDTO)
+    {
         return processedWordsService.findByKeyword(findKeywordRequestDTO.getKeyword()).map(keywordMapper::toFindKeywordDTO);
     }
 
     @Override
-    public Optional<FindKeywordResponseDTO> createKeyword(CreateKeywordRequestDTO createKeywordRequestDTO) {
-
+    public Optional<FindKeywordResponseDTO> createKeyword(CreateKeywordRequestDTO createKeywordRequestDTO)
+    {
         Optional<ProcessedWords> queryResult = processedWordsService.findByKeyword(createKeywordRequestDTO.getKeyword());
         if(!queryResult.isPresent()){
             ProcessedWords obj = ProcessedWords.builder()
@@ -43,13 +45,27 @@ public class KeywordsRestServiceImpl implements KeywordsRestService {
     }
 
     @Override
-    public int updateKeyword(UpdateKeywordRequestDTO updateKeywordRequestDTO) {
-
+    public int updateKeyword(UpdateKeywordRequestDTO updateKeywordRequestDTO)
+    {
         Optional<ProcessedWords> queryResult = processedWordsService.findByKeyword(updateKeywordRequestDTO.getKeyword());
         if(queryResult.isPresent()){
             return processedWordsService.update(updateKeywordRequestDTO);
         } else {
             return 0;
+        }
+    }
+
+    @Override
+    public Optional<GetRandomKeywordResponseDTO> getRandomKeyword()
+    {
+        Optional<ProcessedWords> queryResult = processedWordsService.findByKeywordOrderByOldestApiRequestedAt();
+        if(queryResult.isPresent())
+        {
+            // TODO add here SQL query for updating apiRequestedAt = timestamp now() by id
+
+            return queryResult.map(keywordMapper::toRandomKeywordDTO);
+        } else {
+            return Optional.empty();
         }
     }
 }

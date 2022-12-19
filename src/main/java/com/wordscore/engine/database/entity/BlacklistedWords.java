@@ -1,8 +1,8 @@
 package com.wordscore.engine.database.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 

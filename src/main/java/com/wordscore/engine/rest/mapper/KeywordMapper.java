@@ -3,6 +3,7 @@ package com.wordscore.engine.rest.mapper;
 import com.wordscore.engine.config.BaseMapperConfig;
 import com.wordscore.engine.database.entity.ProcessedWords;
 import com.wordscore.engine.rest.dto.FindKeywordResponseDTO;
+import com.wordscore.engine.rest.dto.GetRandomKeywordResponseDTO;
 import com.wordscore.engine.rest.dto.UpdateKeywordResponseDTO;
 import org.mapstruct.Mapper;
 
@@ -14,4 +15,6 @@ public interface KeywordMapper {
     FindKeywordResponseDTO toCreateKeywordDTO(ProcessedWords processedWords);
 
     UpdateKeywordResponseDTO toUpdateKeywordDTO(ProcessedWords processedWords);
+
+    GetRandomKeywordResponseDTO toRandomKeywordDTO(ProcessedWords processedWords);
 }

@@ -2,13 +2,14 @@ package com.wordscore.engine.rest.mapper;
 
 import com.wordscore.engine.database.entity.ProcessedWords;
 import com.wordscore.engine.rest.dto.FindKeywordResponseDTO;
+import com.wordscore.engine.rest.dto.GetRandomKeywordResponseDTO;
 import com.wordscore.engine.rest.dto.UpdateKeywordResponseDTO;
 import javax.annotation.processing.Generated;
 import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2022-12-18T22:23:32+0200",
+    date = "2022-12-19T16:50:07+0200",
     comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-7.5.1.jar, environment: Java 17 (Oracle Corporation)"
 )
 @Component
@@ -84,5 +85,18 @@ public class KeywordMapperImpl implements KeywordMapper {
         }
 
         return updateKeywordResponseDTO.build();
+    }
+
+    @Override
+    public GetRandomKeywordResponseDTO toRandomKeywordDTO(ProcessedWords processedWords) {
+        if ( processedWords == null ) {
+            return null;
+        }
+
+        GetRandomKeywordResponseDTO.GetRandomKeywordResponseDTOBuilder getRandomKeywordResponseDTO = GetRandomKeywordResponseDTO.builder();
+
+        getRandomKeywordResponseDTO.keyword( processedWords.getKeyword() );
+
+        return getRandomKeywordResponseDTO.build();
     }
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.impl.WordsGeneratorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-12-04T20:29:14" hostname="DESKTOP-BKOOSAD" time="0.005">
+<testsuite name="com.impl.WordsGeneratorTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2022-12-19T14:50:11" hostname="DESKTOP-BKOOSAD" time="0.003">
   <properties/>
-  <testcase name="justAnExample()" classname="com.impl.WordsGeneratorTest" time="0.005"/>
+  <testcase name="justAnExample()" classname="com.impl.WordsGeneratorTest" time="0.003"/>
   <system-out><![CDATA[List of the text files in the specified directory:
 ]]></system-out>
   <system-err><![CDATA[]]></system-err>

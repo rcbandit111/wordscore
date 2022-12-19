@@ -79,16 +79,19 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                     Optional<ProcessedWords> isFound = processedWordsService.findByKeyword(item.getKeyword());
 
                     if (isFound.isPresent()) {
+
                         // Sometimes low range ang high range can be empty. We need to skip this case and update only ScoreUs
                         if (item.getLowRange() != null && item.getHighRange() != null) {
                             UpdateKeywordRequestDTO obj = UpdateKeywordRequestDTO.builder()
                                     .keyword(item.getKeyword()).seoScoreUs(item.getAvgMonthlySearches())
+                                    .keywordsCount(countWords(item.getKeyword()))
                                     .lowRange(item.getLowRange()).highRange(item.getHighRange()).build();
                             processedWordsService.updateBySeoScoreUs(obj);
                         } else // Update all values based on keyword
                         {
                             UpdateKeywordRequestDTO obj = UpdateKeywordRequestDTO.builder()
                                     .keyword(item.getKeyword()).seoScoreUs(item.getAvgMonthlySearches())
+                                    .keywordsCount(countWords(item.getKeyword()))
                                     .lowRange(item.getLowRange()).highRange(item.getHighRange()).build();
                             processedWordsService.update(obj);
                         }
@@ -99,6 +102,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 .seoScoreUs(item.getAvgMonthlySearches())
                                 .lowRange(item.getLowRange())
                                 .highRange(item.getHighRange())
+                                .keywordsCount(countWords(item.getKeyword()))
                                 .createdAt(LocalDateTime.now())
                                 .build();
                         processedWordsService.save(obj);
@@ -122,5 +126,13 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
             System.out.println(String.format("\nProcessed file : %s, moving the file to subfolder /processed\n",
                     originalPath));
         }
+    }
+
+    private int countWords(String keyword)
+    {
+        String[] words = keyword.trim().split("\\s+");
+
+        System.out.println("count is = " + words.length);
+        return words.length;
     }
 }

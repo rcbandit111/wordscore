@@ -1,8 +1,8 @@
 package com.wordscore.engine.database.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -51,11 +51,14 @@ public class ProcessedWords implements Serializable {
     @Column(name = "is_org_domain_available")
     private Boolean isOrgDomainAvailable;
 
-    @Column(name = "is_trademark")
-    private Boolean isTrademark;
+    @Column(name = "trademark_blacklisted")
+    private String trademarkBlacklisted;
 
     @Column(name = "sold_at")
     private LocalDateTime soldAt;
+
+    @Column(name = "api_requested_at")
+    private LocalDateTime apiRequestedAt;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;

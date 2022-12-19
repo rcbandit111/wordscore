@@ -11,4 +11,6 @@ public interface KeywordsRestService {
     Optional<FindKeywordResponseDTO> createKeyword(CreateKeywordRequestDTO createKeywordRequestDTO);
 
     int updateKeyword(UpdateKeywordRequestDTO updateKeywordRequestDTO);
+
+    Optional<GetRandomKeywordResponseDTO> getRandomKeyword();
 }

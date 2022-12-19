@@ -2,12 +2,12 @@ package com.wordscore.engine.database.service;
 
 import com.wordscore.engine.database.entity.ProcessedWords;
 import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
 import java.util.Optional;
 
 @Service
@@ -38,12 +38,12 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
 
     @Override
     public int update(UpdateKeywordRequestDTO dto) {
-        return dao.updateByKeyword(dto.getKeyword(), dto.getSeoScoreUs());
+        return dao.updateByKeyword(dto.getKeyword(), dto.getSeoScoreUs(), dto.getKeywordsCount());
     }
 
     @Override
     public int updateBySeoScoreUs(UpdateKeywordRequestDTO dto) {
-        return dao.updateBySeoScoreUs(dto.getKeyword(), dto.getSeoScoreUs(), dto.getLowRange(), dto.getHighRange());
+        return dao.updateBySeoScoreUs(dto.getKeyword(), dto.getSeoScoreUs(), dto.getLowRange(), dto.getHighRange(), dto.getKeywordsCount());
     }
 
     @Override
@@ -74,5 +74,10 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     @Override
     public int updateOrgDomainById(long id, boolean isAvailable) {
         return dao.updateOrgDomainById(id, isAvailable);
+    }
+
+    @Override
+    public Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt() {
+        return dao.findByKeywordOrderByOldestApiRequestedAt();
     }
 }

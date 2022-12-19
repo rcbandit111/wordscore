@@ -18,16 +18,18 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     Optional<ProcessedWords> findByKeyword(@Param("keyword") String keyword);
 
     @Modifying
-    @Query(value="update processed_words set seo_score_us = :seoScoreUs where keyword = :keyword", nativeQuery = true)
+    @Query(value="update processed_words set seo_score_us = :seoScoreUs, keywords_count = :keywordsCount where keyword = :keyword", nativeQuery = true)
     int updateByKeyword(@Param("keyword") String keyword,
-                        @Param("seoScoreUs") BigDecimal seoScoreUs);
+                        @Param("seoScoreUs") BigDecimal seoScoreUs,
+                        @Param("keywordsCount") Integer keywordsCount);
 
     @Modifying
-    @Query(value="update processed_words set seo_score_us = :seoScoreUs, low_range = :lowRange, high_range = :highRange where keyword = :keyword", nativeQuery = true)
+    @Query(value="update processed_words set seo_score_us = :seoScoreUs, low_range = :lowRange, high_range = :highRange, keywords_count = :keywordsCount where keyword = :keyword", nativeQuery = true)
     int updateBySeoScoreUs(@Param("keyword") String keyword,
                         @Param("seoScoreUs") BigDecimal seoScoreUs,
                         @Param("lowRange") BigDecimal lowRange,
-                        @Param("highRange") BigDecimal highRange);
+                        @Param("highRange") BigDecimal highRange,
+                        @Param("keywordsCount") Integer keywordsCount);
 
     @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findRandomKeyword();
@@ -51,4 +53,10 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     @Query(value="update processed_words set is_org_domain_available = :isAvailable where id = :id", nativeQuery = true)
     int updateOrgDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
 
+    @Query(value = "select id, processed_words, api_requested_at from processed_words ORDER BY api_requested_at ASC LIMIT 1", nativeQuery = true)
+    Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();
+
+    @Modifying
+    @Query(value="update processed_words set seo_score_us = :seoScoreUs, keywords_count = :keywordsCount where id = :id", nativeQuery = true)
+    int updateOldestApiRequestedAtById(@Param("id") Long id);
 }

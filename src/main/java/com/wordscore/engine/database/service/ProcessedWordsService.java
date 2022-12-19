@@ -26,4 +26,6 @@ public interface ProcessedWordsService {
     int updateNetDomainById(long id, boolean isAvailable);
 
     int updateOrgDomainById(long id, boolean isAvailable);
+
+    Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();
 }
