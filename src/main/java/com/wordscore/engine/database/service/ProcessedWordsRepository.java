@@ -37,6 +37,9 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) where keywords_count is null LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty();
 
+    @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) where trademark_blacklisted is null LIMIT 1", nativeQuery = true)
+    Optional<ProcessedWords> findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
+
     @Modifying
     @Query(value = "UPDATE processed_words SET keywords_count = :count WHERE keyword = :keyword", nativeQuery = true)
     int updateKeywordCount(@Param("count") Integer count, @Param("keyword") String keyword);
@@ -59,4 +62,8 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     @Modifying
     @Query(value="update processed_words set seo_score_us = :seoScoreUs, keywords_count = :keywordsCount where id = :id", nativeQuery = true)
     int updateOldestApiRequestedAtById(@Param("id") Long id);
+
+    @Modifying
+    @Query(value="update processed_words set trademark_blacklisted = :keyword where id = :id", nativeQuery = true)
+    int updateTrademarkBlacklisted(@Param("id") Long id, @Param("keyword") String keyword);
 }

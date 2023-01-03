@@ -19,6 +19,8 @@ public interface ProcessedWordsService {
 
     Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty();
 
+    Optional<ProcessedWords> findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
+
     int updateKeywordCount(Integer count, String keyword);
 
     int updateComDomainById(long id, boolean isAvailable);
@@ -28,4 +30,6 @@ public interface ProcessedWordsService {
     int updateOrgDomainById(long id, boolean isAvailable);
 
     Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();
+
+    int updateTrademarkBlacklisted(long id, String keyword1);
 }

@@ -57,6 +57,11 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     }
 
     @Override
+    public Optional<ProcessedWords> findRandomKeywordWhereTrademarkBlacklistedIsEmpty() {
+        return dao.findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
+    }
+
+    @Override
     public int updateKeywordCount(Integer count, String keyword) {
         return dao.updateKeywordCount(count, keyword);
     }
@@ -79,5 +84,10 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     @Override
     public Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt() {
         return dao.findByKeywordOrderByOldestApiRequestedAt();
+    }
+
+    @Override
+    public int updateTrademarkBlacklisted(long id, String keyword1) {
+        return dao.updateTrademarkBlacklisted(id, keyword1);
     }
 }

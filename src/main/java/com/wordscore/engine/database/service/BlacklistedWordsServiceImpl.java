@@ -1,5 +1,6 @@
 package com.wordscore.engine.database.service;
 
+import com.wordscore.engine.database.entity.BlacklistResult;
 import com.wordscore.engine.database.entity.BlacklistedWords;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -23,6 +25,11 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
     @Autowired
     public BlacklistedWordsServiceImpl(BlacklistedWordsRepository dao){
         this.dao = dao;
+    }
+
+    @Override
+    public List<BlacklistResult> findBlacklistedKeyword(String keyword) {
+        return dao.findBlacklistedKeyword(keyword);
     }
 
     @Override
