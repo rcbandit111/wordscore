@@ -1,6 +1,7 @@
 package com.wordscore.engine.processor;
 
 import com.opencsv.bean.CsvToBeanBuilder;
+import com.wordscore.engine.database.entity.BlacklistResult;
 import com.wordscore.engine.database.entity.ProcessedWords;
 import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 import org.quartz.Job;
@@ -107,6 +108,23 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 .build();
                         processedWordsService.save(obj);
                     }
+
+                    // Check for blacklisted keyword
+
+                        String keyword = item.getKeyword();
+                        System.out.println("Checking blacklisted keyword: " + keyword);
+                        List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
+
+                        if(blacklistedKeyword.size() > 0 )
+                        {
+                            String foundBlacklistedKeyword = blacklistedKeyword.get(0).getKeyword();
+
+                            System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
+
+                            processedWordsService.updateTrademarkBlacklistedByKeyword(keyword, foundBlacklistedKeyword);
+                        }
+
+                    // end of check for blacklisted keyword
             }}
 
             } catch (Exception e){
@@ -135,4 +153,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
         System.out.println("count is = " + words.length);
         return words.length;
     }
+
+
+
 }

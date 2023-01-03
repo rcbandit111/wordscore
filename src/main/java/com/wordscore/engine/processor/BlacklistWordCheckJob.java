@@ -31,7 +31,7 @@ public class BlacklistWordCheckJob extends ServiceFactory implements Job {
 
                 System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
 
-                processedWordsService.updateTrademarkBlacklisted(id, foundBlacklistedKeyword);
+                processedWordsService.updateTrademarkBlacklistedById(id, foundBlacklistedKeyword);
             }
         }
     }

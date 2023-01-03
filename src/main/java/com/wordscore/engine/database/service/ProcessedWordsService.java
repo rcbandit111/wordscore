@@ -31,5 +31,7 @@ public interface ProcessedWordsService {
 
     Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();
 
-    int updateTrademarkBlacklisted(long id, String keyword1);
+    int updateTrademarkBlacklistedById(long id, String foundBlacklistedKeyword);
+
+    int updateTrademarkBlacklistedByKeyword(String keyword, String foundBlacklistedKeyword);
 }

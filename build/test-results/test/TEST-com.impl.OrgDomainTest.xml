@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.impl.OrgDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-01-03T22:08:08" hostname="DESKTOP-BKOOSAD" time="0.4">
+<testsuite name="com.impl.OrgDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-01-03T22:57:44" hostname="DESKTOP-BKOOSAD" time="0.378">
   <properties/>
-  <testcase name="justAnExample()" classname="com.impl.OrgDomainTest" time="0.4"/>
+  <testcase name="justAnExample()" classname="com.impl.OrgDomainTest" time="0.378"/>
   <system-out><![CDATA[---> 2023-04-16T04:00:00Z
 ---> 2023-04-16T04:00
 ---> Not available cnn.org

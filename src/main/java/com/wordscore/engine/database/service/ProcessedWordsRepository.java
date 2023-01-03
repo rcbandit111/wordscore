@@ -64,6 +64,10 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     int updateOldestApiRequestedAtById(@Param("id") Long id);
 
     @Modifying
-    @Query(value="update processed_words set trademark_blacklisted = :keyword where id = :id", nativeQuery = true)
-    int updateTrademarkBlacklisted(@Param("id") Long id, @Param("keyword") String keyword);
+    @Query(value="update processed_words set trademark_blacklisted = :foundBlacklistedKeyword where id = :id", nativeQuery = true)
+    int updateTrademarkBlacklistedById(@Param("id") Long id, @Param("foundBlacklistedKeyword") String foundBlacklistedKeyword);
+
+    @Modifying
+    @Query(value="update processed_words set trademark_blacklisted = :foundBlacklistedKeyword where keyword = :keyword", nativeQuery = true)
+    int updateTrademarkBlacklistedByKeyword(@Param("keyword") String keyword, @Param("foundBlacklistedKeyword") String foundBlacklistedKeyword);
 }

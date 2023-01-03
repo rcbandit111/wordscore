@@ -87,7 +87,12 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     }
 
     @Override
-    public int updateTrademarkBlacklisted(long id, String keyword1) {
-        return dao.updateTrademarkBlacklisted(id, keyword1);
+    public int updateTrademarkBlacklistedById(long id, String foundBlacklistedKeyword) {
+        return dao.updateTrademarkBlacklistedById(id, foundBlacklistedKeyword);
+    }
+
+    @Override
+    public int updateTrademarkBlacklistedByKeyword(String keyword, String foundBlacklistedKeyword) {
+        return dao.updateTrademarkBlacklistedByKeyword(keyword, foundBlacklistedKeyword);
     }
 }
