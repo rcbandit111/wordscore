@@ -17,6 +17,15 @@ public interface BlacklistedWordsRepository extends JpaRepository<BlacklistedWor
     @Query(value = "select * from blacklisted_words pw where pw.keyword = :keyword ORDER BY pw.created_at ASC", nativeQuery = true)
     Optional<BlacklistedWords> findByKeyword(@Param("keyword") String keyword);
 
-    @Query(value = "select w.id, t.keyword from processed_words w inner join blacklisted_words t on t.keyword ilike '%'||w.keyword||'%' where w.keyword = :keyword", nativeQuery = true)
+    @Query(value = "select \n" +
+            "    w.id,\n" +
+            "    w.keyword as keyword,\n" +
+            "    t.keyword as trademark \n" +
+            "from processed_words w\n" +
+            "join blacklisted_words t on t.keyword =\n" +
+            "  any(string_to_array(w.keyword, ' '))\n" +
+            "where :keyword = any(string_to_array(w.keyword, ' '))", nativeQuery = true)
+
+//    @Query(value = "select w.id, t.keyword from processed_words w inner join blacklisted_words t on t.keyword ilike '%'||w.keyword||'%' where w.keyword = :keyword", nativeQuery = true)
     List<BlacklistResult> findBlacklistedKeyword(@Param("keyword") String keyword);
 }

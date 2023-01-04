@@ -28,7 +28,7 @@ public class DomainOrgCheckJob extends ServiceFactory implements Job {
 
         Optional<ProcessedWords> isFound = processedWordsService.findRandomKeyword();
         if(isFound.isPresent()){
-            String payload = isFound.get().getKeyword() + ".com";
+            String payload = isFound.get().getKeyword() + ".org";
 
             System.out.println("Checking keyword: " + isFound.get().getKeyword());
             long id = isFound.get().getId();

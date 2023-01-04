@@ -21,13 +21,15 @@ public class BlacklistWordCheckJob extends ServiceFactory implements Job {
         if(keywords.isPresent())
         {
             String keyword = keywords.get().getKeyword();
+
             System.out.println("Checking blacklisted keyword: " + keyword);
+
             long id = keywords.get().getId();
             List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
 
             if(blacklistedKeyword.size() > 0 )
             {
-                String foundBlacklistedKeyword = blacklistedKeyword.get(0).getKeyword();
+                String foundBlacklistedKeyword = blacklistedKeyword.get(0).getTrademark();
 
                 System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
 

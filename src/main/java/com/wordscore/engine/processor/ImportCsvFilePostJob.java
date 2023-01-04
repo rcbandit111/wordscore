@@ -7,16 +7,15 @@ import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
-import java.io.IOException;
+import java.io.*;
+import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -109,22 +108,168 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                         processedWordsService.save(obj);
                     }
 
-                    // Check for blacklisted keyword
+                    String keyword = item.getKeyword();
+//                    // Check for blacklisted keyword
+//
+//
+//                        System.out.println("Checking blacklisted keyword: " + keyword);
+//                        List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
+//
+//                        if(blacklistedKeyword.size() > 0 )
+//                        {
+//                            String foundBlacklistedKeyword = blacklistedKeyword.get(0).getTrademark();
+//
+//                            System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
+//
+//                            processedWordsService.updateTrademarkBlacklistedByKeyword(keyword, foundBlacklistedKeyword);
+//                        }
+//
+//                    // end of check for blacklisted keyword
 
-                        String keyword = item.getKeyword();
-                        System.out.println("Checking blacklisted keyword: " + keyword);
-                        List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
 
-                        if(blacklistedKeyword.size() > 0 )
-                        {
-                            String foundBlacklistedKeyword = blacklistedKeyword.get(0).getKeyword();
+                    // Check for available .com domain
 
-                            System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
+                        String payload = item.getKeyword() + ".com";
 
-                            processedWordsService.updateTrademarkBlacklistedByKeyword(keyword, foundBlacklistedKeyword);
+                        System.out.println("Checking keyword: " + item.getKeyword());
+
+                        String domain = payload.replaceAll("\\s+", "");
+                        System.out.println("Checking com domain: " + domain);
+
+                        try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
+                            OutputStream out = socket.getOutputStream();
+                            out.write((domain + "\r\n").getBytes());
+
+                            try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                                String line;
+                                while ((line = input.readLine()) != null) {
+                                    if (line.contains("Registry Expiry Date")) {
+                                        line = line.substring(line.indexOf(':') + 1).trim();
+                                        System.out.println("---> " + line);
+                                        break; // don't need to read any more input
+                                    }
+                                }
+
+                                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                if(line != null){
+                                    final LocalDateTime dt = LocalDateTime.parse(line, formatter);
+                                    System.out.println("---> " + dt);
+                                    System.out.println("---> Not available " + domain + " " + dt);
+
+                                    // Update keywords into database - "false" for not available - domain is registered
+                                    processedWordsService.updateComDomainByKeyword(keyword, false);
+                                } else {
+                                    System.out.println("---> Available " + domain + " keyword " + keyword);
+
+                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    processedWordsService.updateComDomainByKeyword(keyword, true);
+                                }
+                            }
+
+                            out.flush();
+                            out.close();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
                         }
 
-                    // end of check for blacklisted keyword
+                    // end of check for available .com domain
+
+
+                    // Check for available .net domain
+
+                        String payloadnet = item.getKeyword() + ".net";
+
+                        System.out.println("Checking keyword: " + item.getKeyword());
+                        String domainnet = payloadnet.replaceAll("\\s+", "");
+                        System.out.println("Checking net domain: " + domainnet);
+
+                        try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
+                            OutputStream out = socket.getOutputStream();
+                            out.write((domainnet + "\r\n").getBytes());
+
+                            try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                                String line;
+                                while ((line = input.readLine()) != null) {
+                                    if (line.contains("Registry Expiry Date")) {
+                                        line = line.substring(line.indexOf(':') + 1).trim();
+                                        System.out.println("---> " + line);
+                                        break; // don't need to read any more input
+                                    }
+                                }
+
+                                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                if(line != null){
+                                    final LocalDateTime dt = LocalDateTime.parse(line, formatter);
+                                    System.out.println("---> " + dt);
+                                    System.out.println("---> Not available " + domainnet + " " + dt);
+
+                                    // Update keywords into database - "false" for not available - domain is registered
+                                    processedWordsService.updateNetDomainByKeyword(keyword, false);
+                                } else {
+                                    System.out.println("---> Available " + domainnet + " keyword " + keyword);
+
+                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    processedWordsService.updateNetDomainByKeyword(keyword, true);
+                                }
+                            }
+
+                            out.flush();
+                            out.close();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    // end of check for available .net domain
+
+
+                    // Check for available .org domain
+
+                        String payloadorg = item.getKeyword() + ".org";
+
+                        System.out.println("Checking keyword: " + item.getKeyword());
+                        String domainorg = payloadorg.replaceAll("\\s+", "");
+                        System.out.println("Checking org domain: " + domain);
+
+                        try (Socket socket = new Socket("whois.pir.org", 43)) {
+                            OutputStream out = socket.getOutputStream();
+                            out.write((domainorg + "\r\n").getBytes());
+
+                            try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                                String line;
+                                while ((line = input.readLine()) != null) {
+                                    if (line.contains("Registry Expiry Date")) {
+                                        line = line.substring(line.indexOf(':') + 1).trim();
+                                        System.out.println("---> " + line);
+                                        break; // don't need to read any more input
+                                    }
+                                }
+
+                                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                                if(line != null){
+                                    final LocalDateTime dt = LocalDateTime.parse(line, formatter);
+                                    System.out.println("---> " + dt);
+                                    System.out.println("---> Not available " + domainorg + " " + dt);
+
+                                    // Update keywords into database - "false" for not available - domain is registered
+                                    processedWordsService.updateOrgDomainByKeyword(keyword, false);
+                                } else {
+                                    System.out.println("---> Available " + domainorg + " domainorg " + domainorg);
+
+                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    processedWordsService.updateOrgDomainByKeyword(keyword, true);
+                                }
+                            }
+
+                            out.flush();
+                            out.close();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+
+                    // end of check for available .org domain
             }}
 
             } catch (Exception e){

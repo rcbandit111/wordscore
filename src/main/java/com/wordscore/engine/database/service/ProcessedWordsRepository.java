@@ -49,12 +49,24 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     int updateComDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
 
     @Modifying
+    @Query(value="update processed_words set is_com_domain_available = :isAvailable where keyword = :keyword", nativeQuery = true)
+    int updateComDomainByKeyword(@Param("keyword") String keyword, @Param("isAvailable") boolean isAvailable);
+
+    @Modifying
     @Query(value="update processed_words set is_net_domain_available = :isAvailable where id = :id", nativeQuery = true)
     int updateNetDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
 
     @Modifying
+    @Query(value="update processed_words set is_net_domain_available = :isAvailable where keyword = :keyword", nativeQuery = true)
+    int updateNetDomainByKeyword(@Param("keyword") String keyword, @Param("isAvailable") boolean isAvailable);
+
+    @Modifying
     @Query(value="update processed_words set is_org_domain_available = :isAvailable where id = :id", nativeQuery = true)
     int updateOrgDomainById(@Param("id") long id, @Param("isAvailable") boolean isAvailable);
+
+    @Modifying
+    @Query(value="update processed_words set is_org_domain_available = :isAvailable where keyword = :keyword", nativeQuery = true)
+    int updateOrgDomainByKeyword(@Param("keyword") String keyword, @Param("isAvailable") boolean isAvailable);
 
     @Query(value = "select id, processed_words, api_requested_at from processed_words ORDER BY api_requested_at ASC LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();

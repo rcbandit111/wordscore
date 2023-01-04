@@ -25,9 +25,15 @@ public interface ProcessedWordsService {
 
     int updateComDomainById(long id, boolean isAvailable);
 
+    int updateComDomainByKeyword(String keyword, boolean isAvailable);
+
     int updateNetDomainById(long id, boolean isAvailable);
 
+    int updateNetDomainByKeyword(String keyword, boolean isAvailable);
+
     int updateOrgDomainById(long id, boolean isAvailable);
+
+    int updateOrgDomainByKeyword(String keyword, boolean isAvailable);
 
     Optional<ProcessedWords> findByKeywordOrderByOldestApiRequestedAt();
 

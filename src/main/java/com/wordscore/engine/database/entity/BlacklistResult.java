@@ -5,4 +5,6 @@ public interface BlacklistResult {
     Long getId();
 
     String getKeyword();
+
+    String getTrademark();
 }

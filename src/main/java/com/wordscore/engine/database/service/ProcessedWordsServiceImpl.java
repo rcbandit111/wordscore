@@ -72,13 +72,28 @@ public class ProcessedWordsServiceImpl implements ProcessedWordsService {
     }
 
     @Override
+    public int updateComDomainByKeyword(String keyword, boolean isAvailable) {
+        return dao.updateComDomainByKeyword(keyword, isAvailable);
+    }
+
+    @Override
     public int updateNetDomainById(long id, boolean isAvailable) {
         return dao.updateNetDomainById(id, isAvailable);
     }
 
     @Override
+    public int updateNetDomainByKeyword(String keyword, boolean isAvailable) {
+        return dao.updateNetDomainByKeyword(keyword, isAvailable);
+    }
+
+    @Override
     public int updateOrgDomainById(long id, boolean isAvailable) {
         return dao.updateOrgDomainById(id, isAvailable);
+    }
+
+    @Override
+    public int updateOrgDomainByKeyword(String keyword, boolean isAvailable) {
+        return dao.updateOrgDomainByKeyword(keyword, isAvailable);
     }
 
     @Override
