@@ -127,18 +127,18 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 //                    // end of check for blacklisted keyword
 
 
-                    // Check for available .com domain
+                    // Check for available .com comDomain
 
-                        String payload = item.getKeyword() + ".com";
+                        String comPayload = item.getKeyword() + ".com";
 
                         System.out.println("Checking keyword: " + item.getKeyword());
 
-                        String domain = payload.replaceAll("\\s+", "");
-                        System.out.println("Checking com domain: " + domain);
+                        String comDomain = comPayload.replaceAll("\\s+", "");
+                        System.out.println("Checking com comDomain: " + comDomain);
 
                         try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
                             OutputStream out = socket.getOutputStream();
-                            out.write((domain + "\r\n").getBytes());
+                            out.write((comDomain + "\r\n").getBytes());
 
                             try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                                 String line;
@@ -154,14 +154,14 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 if(line != null){
                                     final LocalDateTime dt = LocalDateTime.parse(line, formatter);
                                     System.out.println("---> " + dt);
-                                    System.out.println("---> Not available " + domain + " " + dt);
+                                    System.out.println("---> Not available " + comDomain + " " + dt);
 
-                                    // Update keywords into database - "false" for not available - domain is registered
+                                    // Update keywords into database - "false" for not available - comDomain is registered
                                     processedWordsService.updateComDomainByKeyword(keyword, false);
                                 } else {
-                                    System.out.println("---> Available " + domain + " keyword " + keyword);
+                                    System.out.println("---> Available " + comDomain + " keyword " + keyword);
 
-                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    // Update keywords into database - "true" for available - comDomain is available for registration
                                     processedWordsService.updateComDomainByKeyword(keyword, true);
                                 }
                             }
@@ -173,20 +173,20 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                             e.printStackTrace();
                         }
 
-                    // end of check for available .com domain
+                    // end of check for available .com comDomain
 
 
-                    // Check for available .net domain
+                    // Check for available .net comDomain
 
-                        String payloadnet = item.getKeyword() + ".net";
+                        String netPayload = item.getKeyword() + ".net";
 
                         System.out.println("Checking keyword: " + item.getKeyword());
-                        String domainnet = payloadnet.replaceAll("\\s+", "");
-                        System.out.println("Checking net domain: " + domainnet);
+                        String netDomain = netPayload.replaceAll("\\s+", "");
+                        System.out.println("Checking net comDomain: " + netDomain);
 
                         try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
                             OutputStream out = socket.getOutputStream();
-                            out.write((domainnet + "\r\n").getBytes());
+                            out.write((netDomain + "\r\n").getBytes());
 
                             try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                                 String line;
@@ -202,14 +202,14 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 if(line != null){
                                     final LocalDateTime dt = LocalDateTime.parse(line, formatter);
                                     System.out.println("---> " + dt);
-                                    System.out.println("---> Not available " + domainnet + " " + dt);
+                                    System.out.println("---> Not available " + netDomain + " " + dt);
 
-                                    // Update keywords into database - "false" for not available - domain is registered
+                                    // Update keywords into database - "false" for not available - comDomain is registered
                                     processedWordsService.updateNetDomainByKeyword(keyword, false);
                                 } else {
-                                    System.out.println("---> Available " + domainnet + " keyword " + keyword);
+                                    System.out.println("---> Available " + netDomain + " keyword " + keyword);
 
-                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    // Update keywords into database - "true" for available - comDomain is available for registration
                                     processedWordsService.updateNetDomainByKeyword(keyword, true);
                                 }
                             }
@@ -221,20 +221,20 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                             e.printStackTrace();
                         }
 
-                    // end of check for available .net domain
+                    // end of check for available .net comDomain
 
 
-                    // Check for available .org domain
+                    // Check for available .org comDomain
 
-                        String payloadorg = item.getKeyword() + ".org";
+                        String orgPayload = item.getKeyword() + ".org";
 
                         System.out.println("Checking keyword: " + item.getKeyword());
-                        String domainorg = payloadorg.replaceAll("\\s+", "");
-                        System.out.println("Checking org domain: " + domain);
+                        String orgDomain = orgPayload.replaceAll("\\s+", "");
+                        System.out.println("Checking org comDomain: " + orgDomain);
 
                         try (Socket socket = new Socket("whois.pir.org", 43)) {
                             OutputStream out = socket.getOutputStream();
-                            out.write((domainorg + "\r\n").getBytes());
+                            out.write((orgDomain + "\r\n").getBytes());
 
                             try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                                 String line;
@@ -250,14 +250,14 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 if(line != null){
                                     final LocalDateTime dt = LocalDateTime.parse(line, formatter);
                                     System.out.println("---> " + dt);
-                                    System.out.println("---> Not available " + domainorg + " " + dt);
+                                    System.out.println("---> Not available " + orgDomain + " " + dt);
 
-                                    // Update keywords into database - "false" for not available - domain is registered
+                                    // Update keywords into database - "false" for not available - comDomain is registered
                                     processedWordsService.updateOrgDomainByKeyword(keyword, false);
                                 } else {
-                                    System.out.println("---> Available " + domainorg + " domainorg " + domainorg);
+                                    System.out.println("---> Available " + orgDomain + " orgDomain " + orgDomain);
 
-                                    // Update keywords into database - "true" for available - domain is available for registration
+                                    // Update keywords into database - "true" for available - comDomain is available for registration
                                     processedWordsService.updateOrgDomainByKeyword(keyword, true);
                                 }
                             }
@@ -269,7 +269,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                             e.printStackTrace();
                         }
 
-                    // end of check for available .org domain
+                    // end of check for available .org comDomain
             }}
 
             } catch (Exception e){
