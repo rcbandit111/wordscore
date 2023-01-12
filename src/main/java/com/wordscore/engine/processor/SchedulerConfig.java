@@ -156,28 +156,28 @@ public class SchedulerConfig {
         return factoryBean;
     }
 
-    // Job for blacklisted words
-
-    @Bean(name = "blacklistedWordsJob")
-    public JobDetailFactoryBean blacklistedWordsJob() {
-
-        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(BlacklistWordCheckJob.class);
-        jobDetailFactory.setDurability(true);
-        return jobDetailFactory;
-    }
-
-    @Bean
-    public SimpleTriggerFactoryBean blacklistedWordsJobTrigger(@Qualifier("blacklistedWordsJob") JobDetail job,
-                                                         @Value("${third.job.frequency}") long frequency) {
-
-        LOG.info("Blacklisted Words Job Trigger");
-
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(job);
-        factoryBean.setStartDelay(0L);
-        factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        return factoryBean;
-    }
+//    // Job for blacklisted words
+//
+//    @Bean(name = "blacklistedWordsJob")
+//    public JobDetailFactoryBean blacklistedWordsJob() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(BlacklistWordCheckJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean blacklistedWordsJobTrigger(@Qualifier("blacklistedWordsJob") JobDetail job,
+//                                                         @Value("${third.job.frequency}") long frequency) {
+//
+//        LOG.info("Blacklisted Words Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
 }

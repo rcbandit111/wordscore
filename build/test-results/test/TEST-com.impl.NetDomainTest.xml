@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="com.impl.NetDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-01-04T19:44:02" hostname="DESKTOP-BKOOSAD" time="0.062">
+<testsuite name="com.impl.NetDomainTest" tests="1" skipped="0" failures="0" errors="0" timestamp="2023-01-12T22:23:34" hostname="DESKTOP-BKOOSAD" time="0.083">
   <properties/>
-  <testcase name="justAnExample()" classname="com.impl.NetDomainTest" time="0.062"/>
+  <testcase name="justAnExample()" classname="com.impl.NetDomainTest" time="0.083"/>
   <system-out><![CDATA[---> 2023-05-03T21:08:39Z
 ---> 2023-05-03T21:08:39
 ---> Not available cnn.net
