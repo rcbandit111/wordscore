@@ -58,103 +58,103 @@ public class SchedulerConfig {
 
     // Job for checking .com domains
 
-    @Bean(name = "DomainComCheckJob")
-    public JobDetailFactoryBean DomainComCheckJob() {
-
-        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(DomainComCheckJob.class);
-        jobDetailFactory.setDurability(true);
-        return jobDetailFactory;
-    }
-
-    @Bean
-    public SimpleTriggerFactoryBean domainComCheckJobTrigger(@Qualifier("DomainComCheckJob") JobDetail job,
-                                                    @Value("${first.job.frequency}") long frequency) {
-
-        LOG.info("Domain Com Job Trigger");
-
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(job);
-        factoryBean.setStartDelay(0L);
-        factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        return factoryBean;
-    }
-
-    // Job for checking .net domains
-
-    @Bean(name = "DomainNetCheck")
-    public JobDetailFactoryBean DomainNetCheck() {
-
-        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(DomainNetCheckJob.class);
-        jobDetailFactory.setDurability(true);
-        return jobDetailFactory;
-    }
-
-    @Bean
-    public SimpleTriggerFactoryBean domainNetCheckTrigger(@Qualifier("DomainNetCheck") JobDetail job,
-                                                     @Value("${second.job.frequency}") long frequency) {
-
-        LOG.info("Domain Net Job Trigger");
-
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(job);
-        factoryBean.setStartDelay(0L);
-        factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        return factoryBean;
-    }
-
-    // Job for checking .org domains
-
-    @Bean(name = "DomainOrgCheck")
-    public JobDetailFactoryBean domainOrgCheck() {
-
-        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(DomainOrgCheckJob.class);
-        jobDetailFactory.setDurability(true);
-        return jobDetailFactory;
-    }
-
-    @Bean
-    public SimpleTriggerFactoryBean domainOrgTrigger(@Qualifier("DomainOrgCheck") JobDetail job,
-                                                     @Value("${third.job.frequency}") long frequency) {
-
-        LOG.info("Domain Org Job Trigger");
-
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(job);
-        factoryBean.setStartDelay(0L);
-        factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        return factoryBean;
-    }
-
-    // Job for counting words
-
-    @Bean(name = "WordsCountJob")
-    public JobDetailFactoryBean wordsCountJob() {
-
-        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(WordsCountJob.class);
-        jobDetailFactory.setDurability(true);
-        return jobDetailFactory;
-    }
-
-    @Bean
-    public SimpleTriggerFactoryBean wordsCountJobTrigger(@Qualifier("WordsCountJob") JobDetail job,
-                                                    @Value("${third.job.frequency}") long frequency) {
-
-        LOG.info("Words Count Job Trigger");
-
-        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
-        factoryBean.setJobDetail(job);
-        factoryBean.setStartDelay(0L);
-        factoryBean.setRepeatInterval(frequency);
-        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
-        return factoryBean;
-    }
+//    @Bean(name = "DomainComCheckJob")
+//    public JobDetailFactoryBean DomainComCheckJob() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(DomainComCheckJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean domainComCheckJobTrigger(@Qualifier("DomainComCheckJob") JobDetail job,
+//                                                    @Value("${first.job.frequency}") long frequency) {
+//
+//        LOG.info("Domain Com Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
+//
+//    // Job for checking .net domains
+//
+//    @Bean(name = "DomainNetCheck")
+//    public JobDetailFactoryBean DomainNetCheck() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(DomainNetCheckJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean domainNetCheckTrigger(@Qualifier("DomainNetCheck") JobDetail job,
+//                                                     @Value("${second.job.frequency}") long frequency) {
+//
+//        LOG.info("Domain Net Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
+//
+//    // Job for checking .org domains
+//
+//    @Bean(name = "DomainOrgCheck")
+//    public JobDetailFactoryBean domainOrgCheck() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(DomainOrgCheckJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean domainOrgTrigger(@Qualifier("DomainOrgCheck") JobDetail job,
+//                                                     @Value("${third.job.frequency}") long frequency) {
+//
+//        LOG.info("Domain Org Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
+//
+//    // Job for counting words
+//
+//    @Bean(name = "WordsCountJob")
+//    public JobDetailFactoryBean wordsCountJob() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(WordsCountJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean wordsCountJobTrigger(@Qualifier("WordsCountJob") JobDetail job,
+//                                                    @Value("${third.job.frequency}") long frequency) {
+//
+//        LOG.info("Words Count Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
 
 //    // Job for blacklisted words
 //
@@ -180,4 +180,31 @@ public class SchedulerConfig {
 //        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
 //        return factoryBean;
 //    }
+
+
+
+    // Job for data validation words
+
+    @Bean(name = "dataValidationWordsJob")
+    public JobDetailFactoryBean blacklistedWordsJob() {
+
+        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+        jobDetailFactory.setJobClass(DataValidationCheckJob.class);
+        jobDetailFactory.setDurability(true);
+        return jobDetailFactory;
+    }
+
+    @Bean
+    public SimpleTriggerFactoryBean dataValidationWordsJobTrigger(@Qualifier("dataValidationWordsJob") JobDetail job,
+                                                         @Value("${third.job.frequency}") long frequency) {
+
+        LOG.info("DataValidation Words Job Trigger");
+
+        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+        factoryBean.setJobDetail(job);
+        factoryBean.setStartDelay(0L);
+        factoryBean.setRepeatInterval(frequency);
+        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+        return factoryBean;
+    }
 }

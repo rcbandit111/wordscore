@@ -41,4 +41,9 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
     public Optional<BlacklistedWords> save(BlacklistedWords entity) {
         return Optional.of(dao.saveAndFlush(entity));
     }
+
+    @Override
+    public List<BlacklistedWords> findAll() {
+        return dao.findAll();
+    }
 }

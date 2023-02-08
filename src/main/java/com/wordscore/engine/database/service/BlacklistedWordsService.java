@@ -13,4 +13,6 @@ public interface BlacklistedWordsService {
     Optional<BlacklistedWords> findByKeyword(String keyword);
 
     Optional<BlacklistedWords> save(BlacklistedWords entity);
+
+    List<BlacklistedWords> findAll();
 }
