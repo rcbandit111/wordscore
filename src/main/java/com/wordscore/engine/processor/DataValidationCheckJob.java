@@ -1,25 +1,23 @@
 package com.wordscore.engine.processor;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.wordscore.engine.database.entity.BlacklistedWords;
-import com.wordscore.engine.database.entity.ProcessedWords;
-import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import java.io.*;
+import java.io.File;
+import java.io.FilenameFilter;
+import java.io.IOException;
+import java.io.Reader;
 import java.math.BigDecimal;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
+import java.util.Objects;
+import java.util.Set;
+import java.util.function.Predicate;
 
 public class DataValidationCheckJob extends ServiceFactory implements Job {
 
@@ -29,113 +27,106 @@ public class DataValidationCheckJob extends ServiceFactory implements Job {
     @Override
     public void execute(JobExecutionContext context) {
 
-        File directoryPath = new File("C:\\csv\\nov");
-        // Create a new subfolder called "processed" into source directory
-        try {
-            Path processedFolderPath = Path.of(directoryPath.getAbsolutePath() + "/processed");
-            if (!Files.exists(processedFolderPath) || !Files.isDirectory(processedFolderPath)) {
-                Files.createDirectory(processedFolderPath);
-            }
+        // preparing
+        File directory = Path.of("C:\\csv\\nov").toFile();
+        // we want to process only csv files from directory
+        FilenameFilter csvFilter = (dir, name) -> name.toLowerCase().endsWith(".csv");
 
-            Path invalidFilesFolderPath = Path.of(directoryPath.getAbsolutePath() + "/invalid_files");
-            if (!Files.exists(invalidFilesFolderPath) || !Files.isDirectory(invalidFilesFolderPath)) {
-                Files.createDirectory(invalidFilesFolderPath);
-            }
+        // specify what conditions should meet the value of every line
+        // to be considered as a valid line
+        List<Predicate<BigDecimal>> fileMatchConditions = List.of(
+                ne(new BigDecimal("50")),
+                ne(new BigDecimal("500")),
+                ne(new BigDecimal("5000"))
+        );
+        // start directory processing
+        try {
+            processDirectory(directory, csvFilter, fileMatchConditions);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
 
-        FilenameFilter textFileFilter = (dir, name) -> {
-            String lowercaseName = name.toLowerCase();
-            if (lowercaseName.endsWith(".csv")) {
-                return true;
-            } else {
-                return false;
-            }
-        };
-        // List of all the csv files
-        File filesList[] = directoryPath.listFiles(textFileFilter);
-        System.out.println("List of the text files in the specified directory:");
+    public static void processDirectory(File directory, FilenameFilter filter,
+                                        List<Predicate<BigDecimal>> fileMatchConditions) throws IOException {
 
-        for(File file : filesList) {
+        Path processedFolderPath = createDirectory(Path.of(directory.getAbsolutePath() + "/processed"));
+        Path invalidFilesFolderPath = createDirectory(Path.of(directory.getAbsolutePath() + "/invalid_files"));
 
-            try {
-                try (var br = new FileReader(file.getAbsolutePath(), StandardCharsets.UTF_16)){
-                    List<CsvLine> beans = new CsvToBeanBuilder(br)
-                            .withType(CsvLine.class)
-                            .withSeparator('\t')
-                            .withSkipLines(3)
-                            .build()
-                            .parse();
+        File[] files = directory.listFiles(filter);
 
-                    Path originalPath = null;
-
-                    boolean found50 = false;
-                    boolean found500 = false;
-                    boolean found5000 = false;
-
-                    for (CsvLine item : beans)
-                    {
-                        originalPath = file.toPath();
-
-                        // Its possible column "Avg. monthly searches" to have empty value
-                        if (item.getAvgMonthlySearches() != null)
-                        {
-                            if (item.getAvgMonthlySearches().compareTo(BigDecimal.valueOf(50)) == 0)
-                            {
-                                found50 = true;
-                            }
-
-                            if (item.getAvgMonthlySearches().compareTo(BigDecimal.valueOf(500)) == 0)
-                            {
-                                found500 = true;
-                            }
-
-                            if (item.getAvgMonthlySearches().compareTo(BigDecimal.valueOf(5000)) == 0)
-                            {
-                                found5000 = true;
-                            }
-                        }
-
-                        if(found50 == true && found500 == true && found5000 == true){
-
-                            found50 = false;
-                            found500 = false;
-                            found5000 = false;
-
-                            // Move here file into new subdirectory when file is invalid
-                            Path copied = Paths.get(file.getParent() + "/invalid_files");
-                            try {
-                                // Use resolve method to keep the "processed" as folder
-                                br.close();
-                                Files.move(originalPath, copied.resolve(originalPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                                break;
-                            } catch (IOException e) {
-                                throw new RuntimeException(e);
-                            }
-                        }
-                    }
-
-                    if (file.exists())
-                    {
-                        // Move here file into new subdirectory when file processing is finished
-                        Path copied = Paths.get(file.getParent() + "/processed");
-                        try {
-                            // Use resolve method to keep the "processed" as folder
-                            br.close();
-                            Files.move(originalPath, copied.resolve(originalPath.getFileName()), StandardCopyOption.REPLACE_EXISTING);
-                            break;
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
+        if (Objects.nonNull(files)) {
+            for (File file : files) {
+                if (isFileValid(file, fileMatchConditions)) {
+                    // if file is valid, then move it to the processed directory
+                    System.out.println("Moving valid file " + file.getName() + " to " + file.getAbsolutePath());
+                    moveFile(file, processedFolderPath, StandardCopyOption.REPLACE_EXISTING);
+                } else {
+                    // if file is not, then move it to the invalid-files directory
+                    System.out.println("Moving invalid file " + file.getName() + " to " + file.getAbsolutePath());
+                    moveFile(file, invalidFilesFolderPath, StandardCopyOption.REPLACE_EXISTING);
                 }
-            } catch (Exception e){
-                e.printStackTrace();
             }
-            Path originalPath = file.toPath();
-            System.out.println(String.format("\nProcessed file : %s, moving the file to subfolder /processed\n",
-                    originalPath));
         }
+    }
+
+    /**
+     * primary file validation
+     * parses the file
+     */
+    public static boolean isFileValid(File file, List<Predicate<BigDecimal>> matchConditions) throws IOException {
+        try (Reader reader = Files.newBufferedReader(file.getAbsoluteFile().toPath(), StandardCharsets.UTF_16)) {
+            List<CsvLine> lineBeans = new CsvToBeanBuilder<CsvLine>(reader)
+                    .withType(CsvLine.class)
+                    .withSeparator('\t')
+                    .withSkipLines(3)
+                    .build()
+                    .parse();
+
+            // unique violations found within this file
+            Set<BigDecimal> violations = new HashSet<>();
+            for (CsvLine line : lineBeans) {
+                // skip if value in the line is null
+                if (Objects.isNull(line.getAvgMonthlySearches())) {
+                    continue;
+                }
+                if (!isLineValid(line, matchConditions)) {
+                    violations.add(line.getAvgMonthlySearches());
+                }
+                // if we reached all the violations, then file is not valid
+                if (violations.size() == matchConditions.size()) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    /**
+     * if all predicates return true, then line is valid
+     */
+    public static boolean isLineValid(CsvLine line, List<Predicate<BigDecimal>> conditions) {
+        return conditions.stream().allMatch(predicate -> predicate.test(line.getAvgMonthlySearches()));
+    }
+
+    /**
+     * move the file to the directory specified
+     */
+    public static void moveFile(File file, Path moveTo, StandardCopyOption option) throws IOException {
+        Files.move(file.toPath(), moveTo.resolve(file.getName()), option);
+    }
+
+    /**
+     * factory method for Predicate that returns true if compareTo != 0
+     */
+    public static <T extends Comparable<T>> Predicate<T> ne(T target) {
+        return (value) -> value.compareTo(target) != 0;
+    }
+
+    public static Path createDirectory(Path path) throws IOException {
+        if (!Files.exists(path) || !Files.isDirectory(path)) {
+            return Files.createDirectory(path);
+        }
+        return path;
     }
 }
