@@ -133,7 +133,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 
                         System.out.println("Checking keyword: " + item.getKeyword());
 
-                        String comDomain = comPayload.replaceAll("\\s+", "");
+                        String comDomain = comPayload.replaceAll("[',\\s+]", "");
                         System.out.println("Checking com comDomain: " + comDomain);
 
                         try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
@@ -181,7 +181,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                         String netPayload = item.getKeyword() + ".net";
 
                         System.out.println("Checking keyword: " + item.getKeyword());
-                        String netDomain = netPayload.replaceAll("\\s+", "");
+                        String netDomain = netPayload.replaceAll("[',\\s+]", "");
                         System.out.println("Checking net comDomain: " + netDomain);
 
                         try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
@@ -229,7 +229,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                         String orgPayload = item.getKeyword() + ".org";
 
                         System.out.println("Checking keyword: " + item.getKeyword());
-                        String orgDomain = orgPayload.replaceAll("\\s+", "");
+                        String orgDomain = orgPayload.replaceAll("[',\\s+]", "");
                         System.out.println("Checking org comDomain: " + orgDomain);
 
                         try (Socket socket = new Socket("whois.pir.org", 43)) {

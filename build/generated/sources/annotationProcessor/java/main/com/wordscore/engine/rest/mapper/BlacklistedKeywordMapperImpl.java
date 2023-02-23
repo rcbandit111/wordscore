@@ -7,8 +7,8 @@ import org.springframework.stereotype.Component;
 
 @Generated(
     value = "org.mapstruct.ap.MappingProcessor",
-    date = "2023-02-20T16:41:33+0200",
-    comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.0.jar, environment: Java 17 (Oracle Corporation)"
+    date = "2023-02-22T16:28:33+0200",
+    comments = "version: 1.5.3.Final, compiler: IncrementalProcessingEnvironment from gradle-language-java-8.0.1.jar, environment: Java 17 (Oracle Corporation)"
 )
 @Component
 public class BlacklistedKeywordMapperImpl implements BlacklistedKeywordMapper {
