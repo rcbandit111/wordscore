@@ -1,12 +1,10 @@
 package com.wordscore.engine.processor;
 
-import com.wordscore.engine.database.entity.BlacklistResult;
 import com.wordscore.engine.database.entity.BlacklistedWords;
 import com.wordscore.engine.database.entity.ProcessedWords;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -45,19 +43,35 @@ public class BlacklistWordCheckJob extends ServiceFactory implements Job {
         if(keywords.isPresent())
         {
             List<BlacklistedWords> blacklistedWords = blacklistedWordsService.findAll();
-            List<String> list = new ArrayList<>();
-            for(BlacklistedWords item:  blacklistedWords){
-                list.add(item.getKeyword());
+            List<String> blacklistedWordslist = new ArrayList<>();
+            for(BlacklistedWords item:  blacklistedWords)
+            {
+                blacklistedWordslist.add(item.getKeyword());
             }
 
             ProcessedWords processedWords = keywords.get();
             String keyword = processedWords.getKeyword();
 
-            if(list.contains(keyword))
-            {
-                System.out.println("Found blacklisted word in keyword: " + keyword);
-            }
+            System.out.println("Checking keyword: " + keyword);
 
+            List<String> phrasesInDocument = findPhrasesInDocument(keyword, blacklistedWordslist);
+
+            if(!phrasesInDocument.isEmpty())
+            {
+                System.out.println("Found blacklisted word in keyword: " + String.join(", ", phrasesInDocument));
+
+                processedWordsService.updateTrademarkBlacklistedById(processedWords.getId(), String.join(", ", phrasesInDocument));
+            }
         }
+    }
+
+    List<String> findPhrasesInDocument(String doc, List<String> phrases) {
+        List<String> foundPhrases = new ArrayList<>();
+        for (String phrase : phrases) {
+            if (doc.indexOf(phrase) != -1) {
+                foundPhrases.add(phrase);
+            }
+        }
+        return foundPhrases;
     }
 }
