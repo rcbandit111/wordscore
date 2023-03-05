@@ -5,9 +5,10 @@ import com.wordscore.engine.database.entity.ProcessedWords;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class BlacklistWordCheckJob extends ServiceFactory implements Job {
 
@@ -16,27 +17,6 @@ public class BlacklistWordCheckJob extends ServiceFactory implements Job {
 
     @Override
     public void execute(JobExecutionContext context) {
-
-//        Optional<ProcessedWords> keywords = processedWordsService.findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
-//
-//        if(keywords.isPresent())
-//        {
-//            String keyword = keywords.get().getKeyword();
-//
-//            System.out.println("Checking blacklisted keyword: " + keyword);
-//
-//            long id = keywords.get().getId();
-//            List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
-//
-//            if(blacklistedKeyword.size() > 0 )
-//            {
-//                String foundBlacklistedKeyword = blacklistedKeyword.get(0).getTrademark();
-//
-//                System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
-//
-//                processedWordsService.updateTrademarkBlacklistedById(id, foundBlacklistedKeyword);
-//            }
-//        }
 
         Optional<ProcessedWords> keywords = processedWordsService.findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
 
@@ -65,13 +45,12 @@ public class BlacklistWordCheckJob extends ServiceFactory implements Job {
         }
     }
 
-    List<String> findPhrasesInDocument(String doc, List<String> phrases) {
-        List<String> foundPhrases = new ArrayList<>();
-        for (String phrase : phrases) {
-            if (doc.indexOf(phrase) != -1) {
-                foundPhrases.add(phrase);
-            }
-        }
-        return foundPhrases;
+    List<String> findPhrasesInDocument(String document, List<String> phrases) {
+        return phrases
+                .stream()
+                .filter(p -> Pattern.compile("(^|\\s)"+ Pattern.quote(p.toLowerCase()) + "(\\s|$)")
+                        .asPredicate()
+                        .test(document.toLowerCase()))
+                .collect(Collectors.toList());
     }
 }

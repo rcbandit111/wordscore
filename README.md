@@ -20,3 +20,11 @@ UPDATE processed_words SET volume_us = NULL;
 UPDATE processed_words SET high_range = NULL;
 
 UPDATE processed_words SET low_range = NULL;
+
+UPDATE processed_words SET trademark_blacklisted = NULL;
+
+## Insert several new blacklisted words
+
+select * from processed_words where trademark_blacklisted is not null;
+
+select * from processed_words where seo_score_us > 1000 and is_net_domain_available = 'true' and low_range is not null;

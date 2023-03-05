@@ -5,6 +5,7 @@ import com.wordscore.engine.database.entity.BlacklistedWords;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ public class BlacklistedWordsServiceImpl implements BlacklistedWordsService {
     }
 
     @Override
+    @Cacheable("blacklist")
     public List<BlacklistedWords> findAll() {
         return dao.findAll();
     }

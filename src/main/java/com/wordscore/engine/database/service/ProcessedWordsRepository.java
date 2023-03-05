@@ -37,7 +37,7 @@ public interface ProcessedWordsRepository extends JpaRepository<ProcessedWords, 
     @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) where keywords_count is null LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findRandomKeywordWhereWordsCountIsEmpty();
 
-    @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) where trademark_blacklisted is null LIMIT 1", nativeQuery = true)
+    @Query(value = "select * from processed_words pw TABLESAMPLE BERNOULLI(1) LIMIT 1", nativeQuery = true)
     Optional<ProcessedWords> findRandomKeywordWhereTrademarkBlacklistedIsEmpty();
 
     @Modifying
