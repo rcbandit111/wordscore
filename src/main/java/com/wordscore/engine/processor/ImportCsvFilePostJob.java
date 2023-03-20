@@ -1,7 +1,7 @@
 package com.wordscore.engine.processor;
 
 import com.opencsv.bean.CsvToBeanBuilder;
-import com.wordscore.engine.database.entity.BlacklistResult;
+import com.wordscore.engine.database.entity.BlacklistedWords;
 import com.wordscore.engine.database.entity.ProcessedWords;
 import com.wordscore.engine.rest.dto.UpdateKeywordRequestDTO;
 import org.quartz.Job;
@@ -16,8 +16,11 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 
@@ -27,7 +30,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
     @Override
     public void execute(JobExecutionContext context) {
 
-        File directoryPath = new File("/opt/csv/nov");
+        File directoryPath = new File("/opt/csv3/nov");
         // Create a new subfolder called "processed" into source directory
         try {
             Path path = Path.of(directoryPath.getAbsolutePath() + "/processed");
@@ -80,6 +83,10 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 
                     if (isFound.isPresent()) {
 
+                        // Check for blacklisted keyword
+                        String keywordValue = item.getKeyword();
+                        checkBlacklistedKeyword(isFound.get(), keywordValue);
+
                         // Sometimes low range ang high range can be empty. We need to skip this case and update only ScoreUs
                         if (item.getLowRange() != null && item.getHighRange() != null) {
                             UpdateKeywordRequestDTO obj = UpdateKeywordRequestDTO.builder()
@@ -95,6 +102,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                     .lowRange(item.getLowRange()).highRange(item.getHighRange()).build();
                             processedWordsService.update(obj);
                         }
+
                     } else // Insert all values as new db row
                     {
                         ProcessedWords obj = ProcessedWords.builder()
@@ -106,72 +114,17 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
                                 .createdAt(LocalDateTime.now())
                                 .build();
                         processedWordsService.save(obj);
+
+                        // Check for blacklisted keyword
+                        String keywordValue = item.getKeyword();
+                        checkBlacklistedKeyword(obj, keywordValue);
                     }
 
                     String keyword = item.getKeyword();
-//                    // Check for blacklisted keyword
-//
-//
-//                        System.out.println("Checking blacklisted keyword: " + keyword);
-//                        List<BlacklistResult> blacklistedKeyword = blacklistedWordsService.findBlacklistedKeyword(keyword);
-//
-//                        if(blacklistedKeyword.size() > 0 )
-//                        {
-//                            String foundBlacklistedKeyword = blacklistedKeyword.get(0).getTrademark();
-//
-//                            System.out.println("Found blacklisted word " + foundBlacklistedKeyword + " in keyword: " + keyword);
-//
-//                            processedWordsService.updateTrademarkBlacklistedByKeyword(keyword, foundBlacklistedKeyword);
-//                        }
-//
-//                    // end of check for blacklisted keyword
-
 
                     // Check for available .com comDomain
 
-                        String comPayload = item.getKeyword() + ".com";
-
-                        System.out.println("Checking keyword: " + item.getKeyword());
-
-                        String comDomain = comPayload.replaceAll("[',\\s+]", "");
-                        System.out.println("Checking com comDomain: " + comDomain);
-
-                        try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
-                            OutputStream out = socket.getOutputStream();
-                            out.write((comDomain + "\r\n").getBytes());
-
-                            try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
-                                String line;
-                                while ((line = input.readLine()) != null) {
-                                    if (line.contains("Registry Expiry Date")) {
-                                        line = line.substring(line.indexOf(':') + 1).trim();
-                                        System.out.println("---> " + line);
-                                        break; // don't need to read any more input
-                                    }
-                                }
-
-                                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
-                                if(line != null){
-                                    final LocalDateTime dt = LocalDateTime.parse(line, formatter);
-                                    System.out.println("---> " + dt);
-                                    System.out.println("---> Not available " + comDomain + " " + dt);
-
-                                    // Update keywords into database - "false" for not available - comDomain is registered
-                                    processedWordsService.updateComDomainByKeyword(keyword, false);
-                                } else {
-                                    System.out.println("---> Available " + comDomain + " keyword " + keyword);
-
-                                    // Update keywords into database - "true" for available - comDomain is available for registration
-                                    processedWordsService.updateComDomainByKeyword(keyword, true);
-                                }
-                            }
-
-                            out.flush();
-                            out.close();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    checkComDomain(item, keyword);
 
                     // end of check for available .com comDomain
 
@@ -182,9 +135,10 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 
                         System.out.println("Checking keyword: " + item.getKeyword());
                         String netDomain = netPayload.replaceAll("[',\\s+]", "");
-                        System.out.println("Checking net comDomain: " + netDomain);
+                        System.out.println("Checking net domain: " + netDomain);
 
                         try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
+                            socket.setSoTimeout(5000);
                             OutputStream out = socket.getOutputStream();
                             out.write((netDomain + "\r\n").getBytes());
 
@@ -230,9 +184,10 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
 
                         System.out.println("Checking keyword: " + item.getKeyword());
                         String orgDomain = orgPayload.replaceAll("[',\\s+]", "");
-                        System.out.println("Checking org comDomain: " + orgDomain);
+                        System.out.println("Checking org domain: " + orgDomain);
 
                         try (Socket socket = new Socket("whois.pir.org", 43)) {
+                            socket.setSoTimeout(5000);
                             OutputStream out = socket.getOutputStream();
                             out.write((orgDomain + "\r\n").getBytes());
 
@@ -291,6 +246,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
         }
     }
 
+    // duplicated code - find a way to use it once
     private int countWords(String keyword)
     {
         String[] words = keyword.trim().split("\\s+");
@@ -299,6 +255,85 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
         return words.length;
     }
 
+    private void checkBlacklistedKeyword(ProcessedWords processedWords, String keyword)
+    {
+        List<BlacklistedWords> blacklistedWords = blacklistedWordsService.findAll();
+        List<String> blacklistedWordslist = new ArrayList<>();
+        for(BlacklistedWords item:  blacklistedWords)
+        {
+            blacklistedWordslist.add(item.getKeyword());
+        }
+
+        System.out.println("Checking keyword: " + keyword);
+
+        List<String> phrasesInDocument = findPhrasesInDocument(keyword, blacklistedWordslist);
+
+        if(!phrasesInDocument.isEmpty())
+        {
+            System.out.println("Found blacklisted word in keyword: " + String.join(", ", phrasesInDocument));
+
+            processedWordsService.updateTrademarkBlacklistedById(processedWords.getId(), String.join(", ", phrasesInDocument));
+        }
+    }
+
+    // duplicated code - find a way to use it once
+    List<String> findPhrasesInDocument(String document, List<String> phrases) {
+        return phrases
+                .stream()
+                .filter(p -> Pattern.compile("(^|\\s)"+ Pattern.quote(p.toLowerCase()) + "(\\s|$)")
+                        .asPredicate()
+                        .test(document.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+
+    // duplicated code - find a way to use it once
+    private void checkComDomain(CsvLine item, String keyword)
+    {
+        String comPayload = item.getKeyword() + ".com";
+
+        System.out.println("Checking keyword: " + item.getKeyword());
+
+        String comDomain = comPayload.replaceAll("[',\\s+]", "");
+        System.out.println("Checking com domain: " + comDomain);
+
+        try (Socket socket = new Socket("whois.verisign-grs.com", 43)) {
+            socket.setSoTimeout(5000);
+            OutputStream out = socket.getOutputStream();
+            out.write((comDomain + "\r\n").getBytes());
+
+            try (BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                String line;
+                while ((line = input.readLine()) != null) {
+                    if (line.contains("Registry Expiry Date")) {
+                        line = line.substring(line.indexOf(':') + 1).trim();
+                        System.out.println("---> " + line);
+                        break; // don't need to read any more input
+                    }
+                }
+
+                final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'");
+                if(line != null){
+                    final LocalDateTime dt = LocalDateTime.parse(line, formatter);
+                    System.out.println("---> " + dt);
+                    System.out.println("---> Not available " + comDomain + " " + dt);
+
+                    // Update keywords into database - "false" for not available - comDomain is registered
+                    processedWordsService.updateComDomainByKeyword(keyword, false);
+                } else {
+                    System.out.println("---> Available " + comDomain + " keyword " + keyword);
+
+                    // Update keywords into database - "true" for available - comDomain is available for registration
+                    processedWordsService.updateComDomainByKeyword(keyword, true);
+                }
+            }
+
+            out.flush();
+            out.close();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 
 }

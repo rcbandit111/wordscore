@@ -158,20 +158,46 @@ public class SchedulerConfig {
 
     // Job for blacklisted words
 
-    @Bean(name = "blacklistedWordsJob")
-    public JobDetailFactoryBean blacklistedWordsJob() {
+//    @Bean(name = "blacklistedWordsJob")
+//    public JobDetailFactoryBean blacklistedWordsJob() {
+//
+//        JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
+//        jobDetailFactory.setJobClass(BlacklistWordCheckJob.class);
+//        jobDetailFactory.setDurability(true);
+//        return jobDetailFactory;
+//    }
+//
+//    @Bean
+//    public SimpleTriggerFactoryBean blacklistedWordsJobTrigger(@Qualifier("blacklistedWordsJob") JobDetail job,
+//                                                         @Value("${third.job.frequency}") long frequency) {
+//
+//        LOG.info("Blacklisted Words Job Trigger");
+//
+//        SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
+//        factoryBean.setJobDetail(job);
+//        factoryBean.setStartDelay(0L);
+//        factoryBean.setRepeatInterval(frequency);
+//        factoryBean.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
+//        return factoryBean;
+//    }
+
+
+    // Job for data Csv File Import words
+
+    @Bean(name = "dataCsvFileImportWordsJob")
+    public JobDetailFactoryBean dataCsvFileImportWordsJob() {
 
         JobDetailFactoryBean jobDetailFactory = new JobDetailFactoryBean();
-        jobDetailFactory.setJobClass(BlacklistWordCheckJob.class);
+        jobDetailFactory.setJobClass(ImportCsvFilePostJob.class);
         jobDetailFactory.setDurability(true);
         return jobDetailFactory;
     }
 
     @Bean
-    public SimpleTriggerFactoryBean blacklistedWordsJobTrigger(@Qualifier("blacklistedWordsJob") JobDetail job,
-                                                         @Value("${third.job.frequency}") long frequency) {
+    public SimpleTriggerFactoryBean dataCsvFileImportWordsJobTrigger(@Qualifier("dataCsvFileImportWordsJob") JobDetail job,
+                                                                  @Value("${third.job.frequency}") long frequency) {
 
-        LOG.info("Blacklisted Words Job Trigger");
+        LOG.info("DataCsvFileImport Words Job Trigger");
 
         SimpleTriggerFactoryBean factoryBean = new SimpleTriggerFactoryBean();
         factoryBean.setJobDetail(job);
