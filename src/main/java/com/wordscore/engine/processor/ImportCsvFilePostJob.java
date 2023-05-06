@@ -30,7 +30,7 @@ public class ImportCsvFilePostJob extends ServiceFactory implements Job {
     @Override
     public void execute(JobExecutionContext context) {
 
-        File directoryPath = new File("/opt/csv3/nov");
+        File directoryPath = new File("/opt/csv4/nov");
         // Create a new subfolder called "processed" into source directory
         try {
             Path path = Path.of(directoryPath.getAbsolutePath() + "/processed");

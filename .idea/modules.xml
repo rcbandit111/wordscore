@@ -2,6 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wordscore.engine.wordscore-engine.main.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wordscore.engine.wordscore-engine.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/com.wordscore.engine.wordscore-engine.test.iml" filepath="$PROJECT_DIR$/.idea/modules/com.wordscore.engine.wordscore-engine.test.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wordscore-engine.main.iml" filepath="$PROJECT_DIR$/.idea/modules/wordscore-engine.main.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/wordscore-engine.test.iml" filepath="$PROJECT_DIR$/.idea/modules/wordscore-engine.test.iml" />
     </modules>

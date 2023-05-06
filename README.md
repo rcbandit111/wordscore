@@ -8,6 +8,7 @@
 4. Words Count Job
 5. Blacklist check job
 
+SELECT pg_size_pretty(pg_database_size('wordscore_engine'));
 
 ## Delete table columns content
 
@@ -24,6 +25,8 @@ UPDATE processed_words SET low_range = NULL;
 UPDATE processed_words SET trademark_blacklisted = NULL;
 
 ## Insert several new blacklisted words
+
+INSERT INTO blacklisted_words (keyword) VALUES ('english to afrikaans');
 
 select * from processed_words where trademark_blacklisted is not null;
 
